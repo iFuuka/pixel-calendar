@@ -1,0 +1,85 @@
+/* ── AuthorBadge ────────────────────────────────────────────── */
+
+.author-badge {
+    position: fixed;
+    bottom: 24px;
+    right: 32px;
+    z-index: 50;
+    /* Above background but below modals */
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.9;
+}
+
+.author-avatar {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    cursor: pointer;
+    animation: float-avatar 3s ease-in-out infinite;
+    filter: drop-shadow(2px 2px 0 var(--clr-shadow));
+    transition: filter 0.15s;
+}
+
+.author-avatar:hover {
+    filter: drop-shadow(2px 2px 0 var(--clr-shadow)) brightness(1.15);
+}
+
+.author-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--clr-rose);
+    cursor: default;
+    user-select: none;
+    text-shadow:
+        1px 1px 0 var(--clr-bg),
+        -1px -1px 0 var(--clr-bg),
+        2px 2px 0 var(--clr-shadow);
+    letter-spacing: 1px;
+    animation: float-avatar 3s ease-in-out infinite 0.15s;
+    /* Slight delay from avatar bouncing */
+}
+
+.author-click-counter {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--clr-text2);
+    background: var(--clr-surface);
+    border: 2px solid var(--clr-border);
+    border-radius: 8px;
+    padding: 1px 6px;
+    opacity: 0.7;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes float-avatar {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+@media (max-width: 768px) {
+    .author-badge {
+        bottom: 16px;
+        right: 16px;
+    }
+
+    .author-avatar {
+        width: 48px;
+        height: 48px;
+    }
+
+    .author-name {
+        font-size: 1rem;
+    }
+}

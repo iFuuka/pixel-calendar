@@ -1,0 +1,147 @@
+/* ── WeatherDetail ─────────────────────────────────────────────── */
+
+.weather-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--wd-bg, var(--clr-sky));
+    border: 3px solid var(--clr-border);
+    border-radius: var(--radius);
+    box-shadow: 3px 3px 0 var(--clr-shadow);
+    animation: slideUp 0.25s ease-out;
+    transition: background 0.3s;
+}
+
+.weather-detail--compact {
+    padding: 10px 12px;
+    gap: 10px;
+}
+
+/* Empty state */
+.wd-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 20px;
+    opacity: 0.6;
+    color: var(--clr-text2);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+/* Top row */
+.wd-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.wd-icon-wrap {
+    flex-shrink: 0;
+    image-rendering: pixelated;
+    filter: drop-shadow(2px 2px 0 rgba(74, 56, 96, 0.15));
+}
+
+.wd-condition {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.wd-label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--clr-text);
+    margin: 0;
+}
+
+.wd-temps {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.wd-temp-max {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--clr-peach2);
+}
+
+.wd-temp-min {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--clr-sky2);
+}
+
+/* Stats grid */
+.wd-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+}
+
+/* Stat pill */
+.wd-stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    background: var(--pill-color, var(--clr-panel));
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius);
+    transition: filter 0.15s;
+}
+
+.wd-stat-pill:hover {
+    filter: brightness(1.05);
+}
+
+.wd-stat-icon {
+    flex-shrink: 0;
+    image-rendering: pixelated;
+    display: flex;
+    align-items: center;
+}
+
+.wd-stat-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.wd-stat-label {
+    font-size: 0.65rem;
+    color: var(--clr-text2);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.wd-stat-value {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--clr-text);
+    white-space: nowrap;
+}
+
+/* ── Dark-theme overrides for weather panel ──────────────────
+   The --wd-bg variable is set from weatherCodes.js as a
+   hardcoded hex. In dark themes, we need to override with
+   the surface colour and just keep a subtle tint via filter.
+   ─────────────────────────────────────────────────────────── */
+[data-theme="lavender-night"] .weather-detail {
+    background: var(--clr-panel) !important;
+    border-color: var(--clr-border);
+}
+
+[data-theme="lavender-night"] .wd-stat-pill {
+    background: var(--clr-surface) !important;
+    filter: brightness(1.15);
+}

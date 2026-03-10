@@ -1,0 +1,27 @@
+.hourly-chart-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.hourly-chart-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--clr-text2);
+    letter-spacing: 0.3px;
+}
+
+.hourly-chart-svg {
+    width: 100%;
+    height: auto;
+    border: 2px solid var(--clr-border);
+    border-radius: 6px;
+    background: var(--clr-surface);
+    box-shadow: 2px 2px 0 var(--clr-border);
+    cursor: crosshair;
+}
+
+.htc-hover-group {
+    pointer-events: none;
+}

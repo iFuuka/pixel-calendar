@@ -1,0 +1,122 @@
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(80, 60, 120, 0.25);
+    backdrop-filter: blur(3px);
+    z-index: 100;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.day-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(380px, 95vw);
+    background: var(--clr-panel);
+    display: flex;
+    flex-direction: column;
+    z-index: 101;
+    border-left: 4px solid var(--clr-border);
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+    box-shadow: -6px 0 24px rgba(120, 80, 200, 0.18);
+    animation: slideInRight 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+    outline: none;
+}
+
+/* Header */
+.modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 20px 18px 14px;
+    border-bottom: 3px solid var(--clr-border);
+    background: linear-gradient(135deg, var(--clr-lavender) 0%, var(--clr-sky) 100%);
+    flex-shrink: 0;
+}
+
+.modal-date-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.today-badge {
+    display: inline-block;
+    background: var(--clr-rose);
+    color: var(--clr-text);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 2px solid var(--clr-rose2);
+    box-shadow: 2px 2px 0 var(--clr-rose2);
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.modal-day-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--clr-selected);
+    letter-spacing: 1px;
+}
+
+.modal-full-date {
+    font-size: 0.78rem;
+    color: var(--clr-text2);
+}
+
+.close-btn {
+    background: var(--clr-rose);
+    border: 3px solid var(--clr-rose2);
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: white;
+    box-shadow: 2px 2px 0 var(--clr-rose2);
+    transition: transform 0.1s, filter 0.15s;
+    flex-shrink: 0;
+    margin-left: 10px;
+}
+
+.close-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.close-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: none;
+}
+
+/* Scrollable content area */
+.modal-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.section-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--clr-text2);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}

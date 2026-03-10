@@ -1,0 +1,133 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, var(--clr-lavender) 0%, var(--clr-sky) 50%, var(--clr-mint) 100%);
+    position: relative;
+    transition: background 0.3s;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-icon {
+    font-size: 1.8rem;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.header-title-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--clr-text);
+    letter-spacing: 1px;
+}
+
+.header-location {
+    font-size: 0.72rem;
+    color: var(--clr-text2);
+    letter-spacing: 0.5px;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-month-year {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 110px;
+}
+
+.month-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--clr-selected);
+    letter-spacing: 1px;
+}
+
+.year-name {
+    font-size: 0.8rem;
+    color: var(--clr-text2);
+}
+
+.nav-btn {
+    background: var(--clr-lavender);
+    border-color: var(--clr-lavender2);
+    color: var(--clr-text);
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    box-shadow: 3px 3px 0 var(--clr-lavender2);
+    transition: transform 0.1s, filter 0.15s;
+}
+
+.nav-btn:hover {
+    filter: brightness(1.08);
+    transform: translateY(-2px);
+}
+
+.nav-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+}
+
+.mock-badge {
+    font-size: 0.65rem;
+    background: var(--clr-peach);
+    border: 2px solid var(--clr-peach2);
+    border-radius: 4px;
+    padding: 3px 8px;
+    color: var(--clr-text);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.settings-btn {
+    background: var(--clr-mint);
+    border-color: var(--clr-mint2);
+    color: var(--clr-text);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    box-shadow: 3px 3px 0 var(--clr-mint2);
+    transition: transform 0.1s, filter 0.15s;
+}
+
+.settings-btn:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+}
+
+.settings-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: none !important;
+}
+
+.settings-btn-label {
+    line-height: 1;
+}

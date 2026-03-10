@@ -1,0 +1,325 @@
+/* ── Admin Panel ────────────────────────────────────────────── */
+
+.admin-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 900;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.admin-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 680px;
+    max-width: 94vw;
+    max-height: 85vh;
+    background: var(--clr-surface);
+    z-index: 910;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.25s ease-out;
+    overflow: hidden;
+}
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px 12px;
+    background: var(--clr-panel);
+    border-bottom: 2px solid var(--clr-border);
+}
+
+.admin-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--clr-text);
+}
+
+.admin-close-btn {
+    background: transparent;
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--clr-text2);
+    transition: background 0.15s, color 0.15s;
+}
+
+.admin-close-btn:hover {
+    background: var(--clr-rose);
+    color: var(--clr-text);
+    border-color: var(--clr-rose2);
+}
+
+/* ── Tabs ──────────────────────────────────────────────────── */
+.admin-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--clr-border);
+    background: var(--clr-bg);
+    overflow-x: auto;
+}
+
+.admin-tab {
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--clr-text2);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    white-space: nowrap;
+}
+
+.admin-tab:hover {
+    color: var(--clr-text);
+    background: var(--clr-surface);
+}
+
+.admin-tab.active {
+    color: var(--clr-text);
+    border-bottom-color: var(--clr-selected);
+    background: var(--clr-surface);
+}
+
+/* ── Content ───────────────────────────────────────────────── */
+.admin-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 18px 20px;
+}
+
+.admin-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-section-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--clr-text);
+    padding-bottom: 4px;
+    border-bottom: 2px solid var(--clr-border);
+}
+
+.admin-muted {
+    font-size: 0.78rem;
+    color: var(--clr-text2);
+}
+
+/* ── Stats Grid ────────────────────────────────────────────── */
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.admin-stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 12px 8px;
+    background: var(--clr-bg);
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius);
+    box-shadow: 2px 2px 0 var(--clr-border);
+}
+
+.admin-stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--clr-selected);
+}
+
+.admin-stat-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--clr-text2);
+    text-align: center;
+}
+
+/* ── Key-Value List ────────────────────────────────────────── */
+.admin-kv-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.admin-kv-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 5px 10px;
+    background: var(--clr-bg);
+    border-radius: 3px;
+    font-size: 0.78rem;
+}
+
+.admin-kv-row:nth-child(even) {
+    background: var(--clr-surface);
+}
+
+.admin-kv-key {
+    font-weight: 700;
+    color: var(--clr-text);
+    min-width: 120px;
+    flex-shrink: 0;
+}
+
+.admin-kv-value {
+    color: var(--clr-text2);
+    word-break: break-all;
+}
+
+.admin-kv-value--wrap {
+    word-break: break-word;
+    font-size: 0.72rem;
+}
+
+/* ── Tags List ─────────────────────────────────────────────── */
+.admin-tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.admin-tag {
+    display: inline-block;
+    padding: 2px 10px;
+    background: var(--clr-lavender);
+    border: 2px solid var(--clr-lavender2);
+    border-radius: 10px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--clr-text);
+}
+
+/* ── JSON Preview ──────────────────────────────────────────── */
+.admin-json {
+    background: var(--clr-bg);
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius);
+    padding: 12px;
+    font-size: 0.72rem;
+    font-family: 'VT323', monospace;
+    color: var(--clr-text);
+    overflow: auto;
+    max-height: 400px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
+/* ── Reminders List ────────────────────────────────────────── */
+.admin-reminders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.admin-reminder-card {
+    padding: 10px 12px;
+    background: var(--clr-bg);
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.admin-reminder-date {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--clr-selected);
+}
+
+.admin-reminder-text {
+    font-size: 0.8rem;
+    color: var(--clr-text);
+}
+
+.admin-reminder-intervals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 2px;
+}
+
+.admin-reminder-chip {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--clr-mint);
+    border: 2px solid var(--clr-mint2);
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--clr-text);
+}
+
+.admin-reminder-chip.notified {
+    background: var(--clr-peach);
+    border-color: var(--clr-peach2);
+    opacity: 0.7;
+}
+
+.admin-reminder-tags {
+    display: flex;
+    gap: 4px;
+    margin-top: 2px;
+}
+
+/* ── Tools ─────────────────────────────────────────────────── */
+.admin-tools {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-tool-card {
+    padding: 14px 16px;
+    background: var(--clr-bg);
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin-tool-card h5 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--clr-text);
+}
+
+.admin-tool-card .btn {
+    align-self: flex-start;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .admin-panel {
+        width: 96vw;
+    }
+
+    .admin-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .admin-kv-key {
+        min-width: 80px;
+    }
+}

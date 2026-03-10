@@ -1,0 +1,396 @@
+.notes-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.notes-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--clr-text);
+    letter-spacing: 0.5px;
+}
+
+/* Add area */
+.notes-add {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.note-textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 3px solid var(--clr-border);
+    border-radius: 4px;
+    background: var(--clr-surface);
+    color: var(--clr-text);
+    font-size: 0.82rem;
+    resize: vertical;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-shadow: 2px 2px 0 var(--clr-border);
+}
+
+.note-textarea:focus {
+    outline: none;
+    border-color: var(--clr-selected);
+    box-shadow: 2px 2px 0 var(--clr-lavender2);
+}
+
+.note-textarea--edit {
+    background: #f8f0ff;
+}
+
+.btn--sm {
+    padding: 4px 10px;
+    font-size: 0.78rem;
+}
+
+/* Add toolbar */
+.notes-add-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.notes-add-toolbar .btn-ghost.active {
+    background: var(--clr-lavender);
+    border-color: var(--clr-lavender2);
+}
+
+/* Add extras (tags + reminder for new note) */
+.notes-add-extras {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    background: var(--clr-surface);
+    border: 2px solid var(--clr-border);
+    border-radius: 4px;
+    animation: slideUp 0.2s ease-out;
+}
+
+/* Empty state */
+.notes-empty {
+    text-align: center;
+    padding: 18px 0;
+    color: var(--clr-text2);
+    font-size: 0.82rem;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.notes-empty-icon {
+    font-size: 1.8rem;
+    display: block;
+    margin-bottom: 4px;
+    animation: bounce 2.5s ease-in-out infinite;
+}
+
+/* Note list */
+.notes-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.note-item {
+    background: var(--clr-surface);
+    border: 2px solid var(--clr-border);
+    border-radius: 4px;
+    padding: 8px 10px;
+    box-shadow: 2px 2px 0 var(--clr-border);
+    animation: slideUp 0.25s ease-out;
+    transition: opacity 0.25s, transform 0.25s;
+}
+
+.note-item--deleting {
+    opacity: 0;
+    transform: translateX(20px) scale(0.95);
+}
+
+.note-view-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.note-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.note-text {
+    font-size: 0.82rem;
+    color: var(--clr-text);
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
+.note-actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.icon-btn {
+    background: none;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 0.85rem;
+    line-height: 1;
+    transition: transform 0.15s, filter 0.15s, border-color 0.15s;
+}
+
+.icon-btn:hover {
+    border-color: var(--clr-border);
+    transform: scale(1.2);
+    filter: brightness(1.1);
+}
+
+.icon-btn--danger:hover {
+    animation: wiggle 0.4s ease-in-out;
+}
+
+.note-edit-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.note-edit-actions {
+    display: flex;
+    gap: 6px;
+}
+
+/* ── Tags display on note ──────────────────────────────────────── */
+.note-tags-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+}
+
+.tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 10px;
+    background: var(--clr-lavender);
+    border: 2px solid var(--clr-lavender2);
+    border-radius: 12px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--clr-text);
+    line-height: 1.3;
+}
+
+.tag-chip--sm {
+    padding: 1px 7px;
+    font-size: 0.7rem;
+}
+
+.tag-chip-remove {
+    background: none;
+    border: none;
+    color: var(--clr-text2);
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0 1px;
+    line-height: 1;
+    transition: color 0.15s;
+}
+
+.tag-chip-remove:hover {
+    color: var(--clr-rose2);
+}
+
+/* ── Tag Input ─────────────────────────────────────────────────── */
+.tag-input-wrap {
+    position: relative;
+}
+
+.tag-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    padding: 4px 6px;
+    border: 2px solid var(--clr-border);
+    border-radius: 4px;
+    background: var(--clr-surface);
+    min-height: 32px;
+    cursor: text;
+}
+
+.tag-chips:focus-within {
+    border-color: var(--clr-selected);
+}
+
+.tag-text-input {
+    border: none;
+    background: transparent;
+    color: var(--clr-text);
+    font-size: 0.78rem;
+    outline: none;
+    min-width: 50px;
+    flex: 1;
+    padding: 2px 0;
+}
+
+.tag-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    list-style: none;
+    background: var(--clr-surface);
+    border: 2px solid var(--clr-border);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 2px 2px 0 var(--clr-shadow);
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.tag-suggestion-item {
+    padding: 5px 10px;
+    font-size: 0.78rem;
+    color: var(--clr-text);
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.tag-suggestion-item:hover {
+    background: var(--clr-lavender);
+}
+
+/* ── Tag Quick Picks (previously used tags) ──────────────────── */
+.tag-quick-picks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 6px 2px;
+    animation: fadeIn 0.15s ease-out;
+}
+
+.tag-quick-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px 9px;
+    background: var(--clr-surface);
+    border: 2px dashed var(--clr-lavender2);
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--clr-text2);
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+
+.tag-quick-chip:hover {
+    background: var(--clr-lavender);
+    border-color: var(--clr-selected);
+    color: var(--clr-text);
+    border-style: solid;
+}
+
+/* ── Reminder badge on note ────────────────────────────────────── */
+.note-reminder-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    padding: 2px 8px;
+    background: var(--clr-mint);
+    border: 2px solid var(--clr-mint2);
+    border-radius: 10px;
+    font-size: 0.7rem;
+    color: var(--clr-text);
+}
+
+.reminder-icon {
+    font-size: 0.8rem;
+}
+
+/* ── Note details expandable panel ─────────────────────────────── */
+.note-details-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+    padding: 10px;
+    background: var(--clr-bg);
+    border: 2px solid var(--clr-border);
+    border-radius: 4px;
+    animation: slideUp 0.2s ease-out;
+}
+
+.note-details-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.note-details-label {
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--clr-text2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ── Reminder Picker ───────────────────────────────────────────── */
+.reminder-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.reminder-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    color: var(--clr-text);
+}
+
+.reminder-toggle input[type="checkbox"] {
+    accent-color: var(--clr-selected);
+    width: 16px;
+    height: 16px;
+}
+
+.reminder-toggle-label {
+    font-weight: 600;
+}
+
+.reminder-intervals {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-left: 22px;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.reminder-interval-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    color: var(--clr-text);
+    padding: 2px 0;
+}
+
+.reminder-interval-option input[type="checkbox"] {
+    accent-color: var(--clr-mint2);
+    width: 14px;
+    height: 14px;
+}

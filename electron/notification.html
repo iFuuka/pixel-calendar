@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reminder</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Pixelify Sans', monospace;
+    background: transparent;
+    overflow: hidden;
+    -webkit-app-region: no-drag;
+    user-select: none;
+  }
+
+  .notif {
+    width: 340px;
+    background: #fdf6f0;
+    border: 3px solid #d8c4f0;
+    border-radius: 6px;
+    box-shadow: 4px 4px 0 #b090d0, 0 8px 32px rgba(0,0,0,0.18);
+    animation: slideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+
+  .notif-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px 8px;
+    background: #fef3fb;
+    border-bottom: 2px solid #d8c4f0;
+  }
+
+  .notif-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #4a3860;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .notif-close {
+    background: transparent;
+    border: 2px solid #d8c4f0;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: #7a6890;
+    transition: background 0.15s;
+  }
+  .notif-close:hover {
+    background: #f8b8cc;
+    color: #4a3860;
+  }
+
+  .notif-body {
+    padding: 12px 14px;
+  }
+
+  .notif-date {
+    font-size: 0.78rem;
+    color: #7a6890;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .notif-text {
+    font-size: 0.88rem;
+    color: #4a3860;
+    line-height: 1.5;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+
+  .notif-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .notif-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #cbb8f0;
+    border: 2px solid #b8a3e0;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #4a3860;
+  }
+
+  .notif-progress {
+    height: 3px;
+    background: #d8c4f0;
+    overflow: hidden;
+  }
+
+  .notif-progress-bar {
+    height: 100%;
+    background: #9b70d8;
+    animation: shrink 8s linear forwards;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to   { transform: translateX(0); opacity: 1; }
+  }
+
+  @keyframes shrink {
+    from { width: 100%; }
+    to   { width: 0%; }
+  }
+</style>
+</head>
+<body>
+  <div class="notif">
+    <div class="notif-header">
+      <span class="notif-title" id="title">Pixel Calendar</span>
+      <button class="notif-close" id="closeBtn" title="Close">&#x2715;</button>
+    </div>
+    <div class="notif-body">
+      <div class="notif-date" id="date"></div>
+      <div class="notif-text" id="text"></div>
+      <div class="notif-tags" id="tags"></div>
+    </div>
+    <div class="notif-progress">
+      <div class="notif-progress-bar" id="progress"></div>
+    </div>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+
+    ipcRenderer.on('notification-data', (event, data) => {
+      document.getElementById('title').textContent = data.title || 'Pixel Calendar';
+      document.getElementById('date').textContent = '\uD83D\uDCC5 ' + (data.dateKey || '');
+      document.getElementById('text').textContent = data.noteText || '';
+
+      const tagsEl = document.getElementById('tags');
+      tagsEl.innerHTML = '';
+      if (data.tags) {
+        data.tags.split(', ').filter(Boolean).forEach(tag => {
+          const span = document.createElement('span');
+          span.className = 'notif-tag';
+          span.textContent = '#' + tag;
+          tagsEl.appendChild(span);
+        });
+      }
+    });
+
+    document.getElementById('closeBtn').addEventListener('click', () => {
+      ipcRenderer.send('close-notification');
+    });
+
+    // Auto-close after 8 seconds
+    setTimeout(() => {
+      ipcRenderer.send('close-notification');
+    }, 8000);
+  </script>
+</body>
+</html>

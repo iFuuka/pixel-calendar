@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" shape-rendering="crispEdges">
+  <!-- Background -->
+  <rect width="64" height="64" rx="8" fill="#cbb8f0"/>
+  <!-- Calendar body -->
+  <rect x="8" y="14" width="48" height="42" rx="4" fill="#fff8f4"/>
+  <rect x="8" y="14" width="48" height="14" rx="4" fill="#f090a8"/>
+  <rect x="8" y="22" width="48" height="6" fill="#f090a8"/>
+  <!-- Calendar rings -->
+  <rect x="20" y="8" width="6" height="12" rx="3" fill="#b8a3e0"/>
+  <rect x="38" y="8" width="6" height="12" rx="3" fill="#b8a3e0"/>
+  <!-- Grid lines -->
+  <rect x="12" y="32" width="6" height="6" fill="#cbb8f0"/>
+  <rect x="20" y="32" width="6" height="6" fill="#f8d8b0"/>
+  <rect x="28" y="32" width="6" height="6" fill="#cbb8f0"/>
+  <rect x="36" y="32" width="6" height="6" fill="#b8ecd4"/>
+  <rect x="44" y="32" width="6" height="6" fill="#cbb8f0"/>
+  <rect x="12" y="40" width="6" height="6" fill="#f8b8cc"/>
+  <rect x="20" y="40" width="6" height="6" fill="#cbb8f0"/>
+  <rect x="28" y="40" width="6" height="6" fill="#b8dff8"/>
+  <rect x="36" y="40" width="6" height="6" fill="#cbb8f0"/>
+  <rect x="44" y="40" width="6" height="6" fill="#ffe066"/>
+  <!-- Star/sparkle on a day -->
+  <rect x="29" y="33" width="4" height="4" fill="#f090a8"/>
+  <!-- Little flower pixels -->
+  <rect x="32" y="50" width="2" height="2" fill="#f090a8"/>
+  <rect x="30" y="50" width="2" height="2" fill="#cbb8f0"/>
+  <rect x="34" y="50" width="2" height="2" fill="#cbb8f0"/>
+  <rect x="32" y="48" width="2" height="2" fill="#cbb8f0"/>
+  <rect x="32" y="52" width="2" height="2" fill="#8dd9b5"/>
+</svg>

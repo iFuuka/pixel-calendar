@@ -1,0 +1,27 @@
+.calendar-container {
+    width: 100%;
+    background: var(--clr-surface);
+    overflow: hidden;
+}
+
+.weekday-headers {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: linear-gradient(90deg, var(--clr-lavender), var(--clr-sky), var(--clr-mint));
+    border-bottom: 3px solid var(--clr-border);
+}
+
+.weekday-label {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--clr-text2);
+    padding: 8px 0;
+    letter-spacing: 1px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+}

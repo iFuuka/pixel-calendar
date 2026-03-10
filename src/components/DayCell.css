@@ -1,0 +1,167 @@
+.day-cell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2px;
+    min-height: 90px;
+    padding: 8px 4px 6px;
+    background: var(--weather-bg, var(--clr-surface));
+    border: 1.5px solid var(--clr-border);
+    border-radius: 0;
+    color: var(--clr-text);
+    cursor: pointer;
+    transition:
+        transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
+        filter 0.15s,
+        background 0.25s,
+        color 0.25s,
+        border-color 0.25s,
+        box-shadow 0.15s;
+    overflow: hidden;
+}
+
+.day-cell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    transition: background 0.15s;
+    pointer-events: none;
+}
+
+.day-cell:hover {
+    transform: scale(1.05) translateY(-2px);
+    filter: brightness(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 2;
+    border-color: var(--clr-lavender2);
+}
+
+.day-cell:hover::before {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.day-cell:active {
+    transform: scale(0.97);
+}
+
+/* Faded out-of-month days */
+.day-cell--faded {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+/* Today highlight — uses theme variables */
+.day-cell--today {
+    background: var(--clr-rose) !important;
+    border-color: var(--clr-rose2) !important;
+    opacity: 0.85;
+}
+
+.day-cell--today .day-number {
+    background: var(--clr-rose2);
+    color: var(--clr-text);
+    border-radius: 4px;
+    padding: 1px 5px;
+    box-shadow: 2px 2px 0 var(--clr-shadow);
+}
+
+/* Selected state — uses theme variables */
+.day-cell--selected {
+    background: var(--clr-lavender) !important;
+    border-color: var(--clr-selected) !important;
+    box-shadow: inset 0 0 0 2px var(--clr-lavender2), 0 4px 10px rgba(0, 0, 0, 0.18);
+    transform: scale(1.04);
+    z-index: 3;
+    opacity: 1;
+}
+
+.day-cell--selected .day-number {
+    color: var(--clr-selected);
+    font-weight: 700;
+}
+
+/* Day number */
+.day-number {
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1;
+    min-width: 22px;
+    text-align: center;
+}
+
+/* Weather mini strip */
+.day-weather {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    margin-top: 4px;
+}
+
+.day-temp {
+    font-size: 0.7rem;
+    color: var(--clr-text2);
+    font-weight: 600;
+}
+
+/* Loading placeholder */
+.day-loading {
+    font-size: 0.75rem;
+    color: var(--clr-text2);
+    letter-spacing: 2px;
+    animation: pulse 1.2s ease-in-out infinite;
+    margin-top: 6px;
+}
+
+/* Note dot indicator */
+.note-dot {
+    position: absolute;
+    bottom: 5px;
+    right: 6px;
+    width: 7px;
+    height: 7px;
+    background: var(--clr-rose2);
+    border-radius: 50%;
+    border: 1.5px solid var(--clr-today);
+    box-shadow: 0 0 4px var(--clr-rose2);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Weekend columns — use theme panel colour (slightly tinted) */
+.day-cell:nth-child(7n + 1),
+.day-cell:nth-child(7n) {
+    background-color: var(--clr-panel);
+}
+
+/* ── Dark-theme weather tint dimming ─────────────────────────
+   In dark themes the hardcoded --weather-bg tints (from
+   weatherCodes.js) would render as blinding pastels.
+   Use a dark pseudo-element overlay to blend them down.
+   ────────────────────────────────────────────────────────── */
+[data-theme="lavender-night"] .day-cell,
+[data-theme="terraria-forest"] .day-cell,
+[data-theme="autumn-sunset"] .day-cell,
+[data-theme="matcha-box"] .day-cell {
+    /* Mix the weather tint with the dark surface background */
+    background-blend-mode: multiply;
+}
+
+/* Stronger dark overlay for the deep dark theme */
+[data-theme="lavender-night"] .day-cell::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--clr-bg);
+    opacity: 0.72;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    z-index: 0;
+}
+
+[data-theme="lavender-night"] .day-cell>* {
+    position: relative;
+    z-index: 1;
+}

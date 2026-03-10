@@ -1,0 +1,360 @@
+/* ================================================
+   PIXEL CALENDAR — Global Stylesheet
+   ================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=VT323&display=swap');
+
+/* ══════════════════════════════════════════════════
+   THEMES — 5 palettes via [data-theme] on <html>
+   ══════════════════════════════════════════════════ */
+
+/* 1 ── Vanilla Sky (Default) ─────── soft pastel blues & creams */
+:root,
+[data-theme="vanilla-sky"] {
+  --clr-bg: #fdf6f0;
+  --clr-surface: #fff8f4;
+  --clr-panel: #fef3fb;
+  --clr-lavender: #cbb8f0;
+  --clr-lavender2: #b8a3e0;
+  --clr-mint: #b8ecd4;
+  --clr-mint2: #8dd9b5;
+  --clr-peach: #f8d8b0;
+  --clr-peach2: #f0b87a;
+  --clr-rose: #f8b8cc;
+  --clr-rose2: #f090a8;
+  --clr-sky: #b8dff8;
+  --clr-sky2: #80c4f0;
+  --clr-sun: #ffe066;
+  --clr-sun2: #ffc844;
+  --clr-text: #4a3860;
+  --clr-text2: #7a6890;
+  --clr-border: #d8c4f0;
+  --clr-shadow: #b090d0;
+  --clr-today: #f090a8;
+  --clr-selected: #9b70d8;
+}
+
+/* 2 ── Lavender Night ─────────────── dark mode: deep purples + soft pinks */
+[data-theme="lavender-night"] {
+  --clr-bg: #1a1228;
+  --clr-surface: #221a38;
+  --clr-panel: #2c2040;
+  --clr-lavender: #6040a0;
+  --clr-lavender2: #7850c0;
+  --clr-mint: #204048;
+  --clr-mint2: #306878;
+  --clr-peach: #402030;
+  --clr-peach2: #703050;
+  --clr-rose: #4a1a30;
+  --clr-rose2: #c060a0;
+  --clr-sky: #1a2a48;
+  --clr-sky2: #3050a0;
+  --clr-sun: #a08020;
+  --clr-sun2: #c0a030;
+  --clr-text: #f0d8ff;
+  --clr-text2: #b098d8;
+  --clr-border: #4a3068;
+  --clr-shadow: #0e0918;
+  --clr-today: #c060a0;
+  --clr-selected: #9060e0;
+}
+
+/* 3 ── Matcha Box ─────────────────── pastel greens & warm whites */
+[data-theme="matcha-box"] {
+  --clr-bg: #f2f7f0;
+  --clr-surface: #f8faf6;
+  --clr-panel: #edf5e8;
+  --clr-lavender: #b8d8a8;
+  --clr-lavender2: #8fbe78;
+  --clr-mint: #c8e8b8;
+  --clr-mint2: #a0d080;
+  --clr-peach: #e8f0d0;
+  --clr-peach2: #c0d890;
+  --clr-rose: #d8e8c0;
+  --clr-rose2: #98c060;
+  --clr-sky: #d0e8d8;
+  --clr-sky2: #90c8a8;
+  --clr-sun: #e8e898;
+  --clr-sun2: #c8c860;
+  --clr-text: #2a4020;
+  --clr-text2: #507040;
+  --clr-border: #b0ccA0;
+  --clr-shadow: #80a870;
+  --clr-today: #98c060;
+  --clr-selected: #60a840;
+}
+
+/* 4 ── Autumn Sunset ─────────────── warm oranges, peaches & soft browns */
+[data-theme="autumn-sunset"] {
+  --clr-bg: #fdf3e8;
+  --clr-surface: #fff8f0;
+  --clr-panel: #fef0e0;
+  --clr-lavender: #f8d098;
+  --clr-lavender2: #f0a840;
+  --clr-mint: #f8e0c0;
+  --clr-mint2: #e8b870;
+  --clr-peach: #fcc8a0;
+  --clr-peach2: #f09060;
+  --clr-rose: #f8c0b0;
+  --clr-rose2: #e87850;
+  --clr-sky: #f0d8b8;
+  --clr-sky2: #e0a870;
+  --clr-sun: #ffe090;
+  --clr-sun2: #f0b830;
+  --clr-text: #5a2c10;
+  --clr-text2: #8a5030;
+  --clr-border: #e0b888;
+  --clr-shadow: #c88840;
+  --clr-today: #e87850;
+  --clr-selected: #d05820;
+}
+
+/* 5 ── Terraria Forest ────────────── vibrant grass greens, earthy browns, sky blue */
+[data-theme="terraria-forest"] {
+  --clr-bg: #e8f4d0;
+  --clr-surface: #f0f8d8;
+  --clr-panel: #d8ecca;
+  --clr-lavender: #6aac30;
+  --clr-lavender2: #4a8c18;
+  --clr-mint: #a8d870;
+  --clr-mint2: #78b840;
+  --clr-peach: #c8982a;
+  --clr-peach2: #a07818;
+  --clr-rose: #d05c20;
+  --clr-rose2: #a03c00;
+  --clr-sky: #80c8f0;
+  --clr-sky2: #50a8e0;
+  --clr-sun: #f8e048;
+  --clr-sun2: #e0c020;
+  --clr-text: #1a2c08;
+  --clr-text2: #385018;
+  --clr-border: #70a030;
+  --clr-shadow: #386010;
+  --clr-today: #d05c20;
+  --clr-selected: #4a8c18;
+}
+
+/* ── CSS Custom Properties (shared) ─────────────── */
+:root {
+  /* Spacing */
+  --radius: 4px;
+  --pixel: 3px;
+
+  /* Font */
+  font-family: 'Pixelify Sans', 'VT323', monospace;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--clr-text);
+}
+
+/* ── Reset ─────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input,
+textarea {
+  font-family: inherit;
+}
+
+/* ── Body ──────────────────────────────────────── */
+body {
+  background: var(--clr-bg);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ── Pixel border utility ──────────────────────── */
+.pixel-border {
+  border: 3px solid var(--clr-border);
+  box-shadow: 4px 4px 0 var(--clr-shadow);
+  border-radius: var(--radius);
+}
+
+.pixel-border-selected {
+  border: 3px solid var(--clr-selected);
+  box-shadow: 4px 4px 0 var(--clr-lavender2);
+  border-radius: var(--radius);
+}
+
+/* ── Button base ───────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 3px solid transparent;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: transform 0.1s, box-shadow 0.1s, filter 0.15s;
+}
+
+.btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none !important;
+}
+
+.btn-primary {
+  background: var(--clr-lavender);
+  border-color: var(--clr-lavender2);
+  color: var(--clr-text);
+  box-shadow: 3px 3px 0 var(--clr-lavender2);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: var(--clr-rose);
+  border-color: var(--clr-rose2);
+  color: var(--clr-text);
+  box-shadow: 3px 3px 0 var(--clr-rose2);
+}
+
+.btn-danger:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--clr-border);
+  color: var(--clr-text2);
+  box-shadow: 2px 2px 0 var(--clr-border);
+}
+
+.btn-ghost:hover {
+  background: var(--clr-surface);
+  filter: brightness(0.97);
+}
+
+/* ── Scrollbar ─────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--clr-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--clr-lavender);
+  border-radius: 4px;
+  border: 2px solid var(--clr-bg);
+}
+
+/* ── Animations ────────────────────────────────── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes wiggle {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-4deg);
+  }
+
+  75% {
+    transform: rotate(4deg);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-5px);
+  }
+}
+
+/* ── App Layout ────────────────────────────────── */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 16px;
+  gap: 20px;
+}
+
+.main-content {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  align-items: flex-start;
+}
+
+.calendar-section {
+  flex: 1;
+  min-width: 0;
+}

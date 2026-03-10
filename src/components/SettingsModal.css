@@ -1,0 +1,312 @@
+/* ── SettingsModal ────────────────────────────────────────────── */
+
+/* Theme Swatches */
+.theme-swatch-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.theme-swatch-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--clr-bg);
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--clr-text);
+    cursor: pointer;
+    box-shadow: 2px 2px 0 var(--clr-border);
+    transition: filter 0.15s, border-color 0.15s, transform 0.1s;
+    text-align: left;
+}
+
+.theme-swatch-btn:hover {
+    filter: brightness(1.05);
+    border-color: var(--clr-lavender2);
+    transform: translateY(-1px);
+}
+
+.theme-swatch-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: none;
+}
+
+.theme-swatch-btn--active {
+    border-color: var(--clr-selected);
+    box-shadow: 2px 2px 0 var(--clr-selected);
+    background: var(--clr-panel);
+}
+
+.theme-swatch-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    background: var(--swatch-dot);
+    border: 2px solid var(--swatch-accent);
+    flex-shrink: 0;
+    box-shadow: 2px 2px 0 var(--swatch-accent);
+}
+
+.theme-swatch-label {
+    flex: 1;
+}
+
+.theme-swatch-check {
+    font-size: 0.9rem;
+    color: var(--clr-selected);
+    font-weight: 700;
+}
+
+
+.settings-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(74, 56, 96, 0.35);
+    backdrop-filter: blur(2px);
+    z-index: 300;
+    animation: fadeIn 0.18s ease;
+}
+
+.settings-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(540px, 96vw);
+    max-height: 88vh;
+    background: var(--clr-surface);
+    border: 3px solid var(--clr-border);
+    box-shadow: 6px 6px 0 var(--clr-shadow);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    z-index: 310;
+    animation: slideUp 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+}
+
+/* Header */
+.settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 12px;
+    background: var(--clr-panel);
+    border-bottom: 2px solid var(--clr-border);
+}
+
+.settings-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--clr-text);
+}
+
+.settings-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.settings-close-btn {
+    background: transparent;
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius);
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--clr-text2);
+    transition: background 0.15s, color 0.15s;
+    font-family: inherit;
+}
+
+.settings-close-btn:hover {
+    background: var(--clr-rose);
+    color: var(--clr-text);
+    border-color: var(--clr-rose2);
+}
+
+/* Body */
+.settings-body {
+    overflow-y: auto;
+    padding: 16px 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Section */
+.settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 18px;
+    border-bottom: 2px dashed var(--clr-border);
+}
+
+.settings-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.settings-section-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--clr-text);
+    margin: 0;
+}
+
+.settings-section-desc {
+    font-size: 0.82rem;
+    color: var(--clr-text2);
+    margin: 0;
+}
+
+/* Geo form */
+.settings-geo-form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.settings-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius);
+    background: var(--clr-bg);
+    color: var(--clr-text);
+    font-size: 0.85rem;
+    transition: border-color 0.15s;
+}
+
+.settings-input:focus {
+    outline: none;
+    border-color: var(--clr-lavender2);
+}
+
+.settings-geo-status {
+    font-size: 0.82rem;
+    padding: 6px 10px;
+    border-radius: var(--radius);
+    margin: 0;
+}
+
+.settings-geo-status.ok {
+    background: var(--clr-mint);
+    border: 2px solid var(--clr-mint2);
+    color: var(--clr-text);
+}
+
+.settings-geo-status.err {
+    background: var(--clr-rose);
+    border: 2px solid var(--clr-rose2);
+    color: var(--clr-text);
+}
+
+/* Toggle rows */
+.settings-toggle-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.settings-toggle-btn {
+    flex: 1;
+    padding: 8px 14px;
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius);
+    background: var(--clr-bg);
+    color: var(--clr-text2);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+    box-shadow: 2px 2px 0 var(--clr-border);
+    min-width: 100px;
+}
+
+.settings-toggle-btn:hover {
+    background: var(--clr-panel);
+    border-color: var(--clr-lavender);
+}
+
+.settings-toggle-btn.active {
+    background: var(--clr-lavender);
+    border-color: var(--clr-lavender2);
+    color: var(--clr-text);
+    box-shadow: 2px 2px 0 var(--clr-lavender2);
+}
+
+.settings-toggle-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: none !important;
+}
+
+/* Data management */
+/* ── Auto-start checkbox rows ──────────────────────────────── */
+.settings-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--clr-text);
+    padding: 6px 0;
+}
+
+.settings-checkbox-row input[type="checkbox"] {
+    accent-color: var(--clr-selected);
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.settings-checkbox-sub {
+    padding-left: 26px;
+    font-weight: 500;
+    color: var(--clr-text2);
+    animation: fadeIn 0.15s ease-out;
+}
+
+.settings-data-btns {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.settings-confirm-msg {
+    font-size: 0.8rem;
+    color: var(--clr-rose2);
+    margin: 0;
+    padding: 6px 10px;
+    background: var(--clr-rose);
+    border: 2px solid var(--clr-rose2);
+    border-radius: var(--radius);
+    animation: fadeIn 0.15s ease;
+}
+
+/* Map loading placeholder */
+.map-loading-placeholder {
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--clr-bg);
+    border: 3px solid var(--clr-border);
+    border-radius: var(--radius);
+    color: var(--clr-text2);
+    font-size: 0.85rem;
+    animation: pulse 1.5s ease-in-out infinite;
+}

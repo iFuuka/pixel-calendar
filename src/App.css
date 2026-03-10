@@ -1,0 +1,56 @@
+/* App-level styles */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+  gap: 20px;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  position: relative;
+}
+
+/* The right column holds stacked calendar + dashboard */
+.content-column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.calendar-section {
+  width: 100%;
+}
+
+.dashboard-section {
+  width: 100%;
+}
+
+/* Sidebar overlay backdrop */
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(74, 56, 96, 0.25);
+  z-index: 190;
+}
+
+/* Background decorative pixel pattern */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(203, 184, 240, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(184, 236, 212, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 60% 20%, rgba(248, 184, 204, 0.1) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: -1;
+}
