@@ -6,7 +6,8 @@ A beautiful pixel-art calendar application with weather tracking, daily notes, r
 
 *Красивый календарь в стиле пиксель-арт с отслеживанием погоды, заметками, напоминаниями и мультиязычностью.*
 
-<img width="1266" height="853" alt="image" src="https://github.com/user-attachments/assets/bbaa176f-6fc3-4ae1-bb03-2c8a5fc30740" />
+<img width="1266" height="853" alt="image" src="https://github.com/user-attachments/assets/831bbe40-bb2a-4cdb-86b4-a822391148d2" />
+
 
 
 ## Features / Особенности
