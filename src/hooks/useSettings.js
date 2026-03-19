@@ -14,6 +14,13 @@ const DEFAULT_SETTINGS = {
     timeFormat: '24',        // '12' | '24'
     autoStart: false,        // Launch on Windows login
     startMinimized: false,   // Start hidden in tray (silent start)
+    holidaysEnabled: false,  // Show public holidays on calendar
+    holidayCountry: 'RU',    // Country code for holidays
+    fontFamily: 'pixel',     // 'pixel' | 'classic'
+    soundEnabled: false,     // 8-bit sound effects
+    decorationsEnabled: true, // Seasonal decorations
+    customThemeEnabled: false,
+    customColors: { bg: '#fdf6f0', surface: '#fff8f4', accent: '#cbb8f0', text: '#4a3860' },
 };
 
 const THEME_KEYS = [
@@ -44,6 +51,27 @@ function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
 }
 
+/** Apply custom theme colors as CSS variables */
+function applyCustomTheme(enabled, colors) {
+    const root = document.documentElement;
+    if (enabled && colors) {
+        root.style.setProperty('--clr-bg', colors.bg);
+        root.style.setProperty('--clr-surface', colors.surface);
+        root.style.setProperty('--clr-lavender', colors.accent);
+        root.style.setProperty('--clr-text', colors.text);
+    } else {
+        root.style.removeProperty('--clr-bg');
+        root.style.removeProperty('--clr-surface');
+        root.style.removeProperty('--clr-lavender');
+        root.style.removeProperty('--clr-text');
+    }
+}
+
+/** Apply data-font to <html> for font switching */
+function applyFont(fontFamily) {
+    document.documentElement.setAttribute('data-font', fontFamily || 'pixel');
+}
+
 export function useSettings() {
     // Flag to check if we are on a fresh start (empty storage)
     const isFirstLaunchRef = useRef(false);
@@ -55,11 +83,13 @@ export function useSettings() {
                 const parsed = JSON.parse(raw);
                 const s = { ...DEFAULT_SETTINGS, ...parsed };
                 applyTheme(s.theme);
+                applyFont(s.fontFamily);
                 return s;
             } else {
                 // VERY FIRST LAUNCH: completely empty storage
                 isFirstLaunchRef.current = true;
                 applyTheme(DEFAULT_SETTINGS.theme);
+                applyFont(DEFAULT_SETTINGS.fontFamily);
                 return { ...DEFAULT_SETTINGS };
             }
         } catch {
@@ -70,6 +100,8 @@ export function useSettings() {
     useEffect(() => {
         saveSettings(settings);
         applyTheme(settings.theme);
+        applyFont(settings.fontFamily);
+        applyCustomTheme(settings.customThemeEnabled, settings.customColors);
     }, [settings]);
 
     // ── Auto-Geolocate ONLY on very first launch ──────────
@@ -146,6 +178,15 @@ export function useSettings() {
     }, []);
     const setLanguage = useCallback((lang) => setSettings((p) => ({ ...p, language: lang })), []);
     const setTimeFormat = useCallback((fmt) => setSettings((p) => ({ ...p, timeFormat: fmt })), []);
+    const setFontFamily = useCallback((ff) => setSettings((p) => ({ ...p, fontFamily: ff })), []);
+    const setCustomThemeEnabled = useCallback((v) => setSettings((p) => ({ ...p, customThemeEnabled: v })), []);
+    const setCustomColor = useCallback((key, value) => setSettings((p) => ({
+        ...p, customColors: { ...p.customColors, [key]: value }, customThemeEnabled: true,
+    })), []);
+    const setSoundEnabled = useCallback((v) => setSettings((p) => ({ ...p, soundEnabled: v })), []);
+    const setDecorationsEnabled = useCallback((v) => setSettings((p) => ({ ...p, decorationsEnabled: v })), []);
+    const setHolidaysEnabled = useCallback((enabled) => setSettings((p) => ({ ...p, holidaysEnabled: enabled })), []);
+    const setHolidayCountry = useCallback((code) => setSettings((p) => ({ ...p, holidayCountry: code, holidaysEnabled: true })), []);
 
     // ── Auto-start (Electron only) ──────────────────
     const setAutoStart = useCallback(async (enabled) => {
@@ -174,6 +215,13 @@ export function useSettings() {
         setTimeFormat,
         setAutoStart,
         setStartMinimized,
+        setFontFamily,
+        setCustomThemeEnabled,
+        setCustomColor,
+        setSoundEnabled,
+        setDecorationsEnabled,
+        setHolidaysEnabled,
+        setHolidayCountry,
         THEME_KEYS,
     };
 }

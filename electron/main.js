@@ -212,12 +212,7 @@ function showNotificationWindow(data) {
         notifWin = null;
     });
 
-    // Auto-close after 9 seconds (slightly longer than the progress bar)
-    setTimeout(() => {
-        if (notifWin && !notifWin.isDestroyed()) {
-            notifWin.close();
-        }
-    }, 9000);
+    // Notification stays on screen until the user dismisses it manually
 }
 
 // ─── IPC Handlers ────────────────────────────────────────────────────────────

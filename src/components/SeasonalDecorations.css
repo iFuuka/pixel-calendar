@@ -1,0 +1,43 @@
+.seasonal-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.seasonal-particle {
+    position: absolute;
+    top: -2rem;
+    opacity: 0.5;
+    animation: seasonalFall linear infinite;
+    will-change: transform;
+}
+
+@keyframes seasonalFall {
+    0% {
+        transform: translateY(-20px) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.5;
+    }
+    90% {
+        opacity: 0.3;
+    }
+    100% {
+        transform: translateY(100vh) translateX(var(--drift, 0px)) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Season-specific tweaks */
+.seasonal-overlay--winter .seasonal-particle {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 2px rgba(180, 210, 255, 0.3));
+}
+
+.seasonal-overlay--summer .seasonal-particle {
+    opacity: 0.25;
+    animation-duration: 15s;
+}

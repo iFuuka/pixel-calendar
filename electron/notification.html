@@ -104,15 +104,7 @@
   }
 
   .notif-progress {
-    height: 3px;
-    background: #d8c4f0;
-    overflow: hidden;
-  }
-
-  .notif-progress-bar {
-    height: 100%;
-    background: #9b70d8;
-    animation: shrink 8s linear forwards;
+    display: none;
   }
 
   @keyframes slideIn {
@@ -166,10 +158,7 @@
       ipcRenderer.send('close-notification');
     });
 
-    // Auto-close after 8 seconds
-    setTimeout(() => {
-      ipcRenderer.send('close-notification');
-    }, 8000);
+    // Notification stays until user clicks close
   </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
    PIXEL CALENDAR — Global Stylesheet
    ================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=VT323&family=Inter:wght@400;500;600;700&display=swap');
 
 /* ══════════════════════════════════════════════════
    THEMES — 5 palettes via [data-theme] on <html>
@@ -145,6 +145,22 @@
   font-size: 16px;
   line-height: 1.5;
   color: var(--clr-text);
+}
+
+/* ── Font family switching via data-font attribute ─── */
+[data-font="classic"] {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+[data-font="classic"] button {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+[data-font="classic"] input,
+[data-font="classic"] textarea {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
 /* ── Reset ─────────────────────────────────────── */

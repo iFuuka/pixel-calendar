@@ -297,6 +297,52 @@
     animation: fadeIn 0.15s ease;
 }
 
+/* Custom theme colors */
+.custom-theme-colors {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.custom-color-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.custom-color-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--clr-text);
+}
+
+.custom-color-input {
+    width: 36px;
+    height: 28px;
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius);
+    padding: 1px;
+    cursor: pointer;
+    background: var(--clr-bg);
+}
+
+/* Holiday country grid */
+.holiday-country-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.holiday-country-btn {
+    font-size: 0.78rem !important;
+    padding: 6px 8px !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
+}
+
 /* Map loading placeholder */
 .map-loading-placeholder {
     height: 220px;

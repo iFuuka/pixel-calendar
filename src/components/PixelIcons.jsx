@@ -230,6 +230,18 @@ export function GearIcon({ size = 24 }) {
     );
 }
 
+// ── Stats Icon ────────────────────────────────────────────────
+export function StatsIcon({ size = 24 }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 16 16" style={{ imageRendering: 'pixelated' }} fill="none">
+            <rect x="2" y="10" width="3" height="4" fill="currentColor" opacity="0.5" />
+            <rect x="6" y="6" width="3" height="8" fill="currentColor" opacity="0.7" />
+            <rect x="10" y="3" width="3" height="11" fill="currentColor" />
+            <rect x="1" y="14" width="14" height="1" fill="currentColor" />
+        </svg>
+    );
+}
+
 // ── Notes List Icon ────────────────────────────────────────────
 export function NotesListIcon({ size = 24 }) {
     return (

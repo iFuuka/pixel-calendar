@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, Suspense, lazy } from 'react';
 import { GearIcon } from './PixelIcons';
+import { HOLIDAY_COUNTRIES } from '../utils/holidays';
 import './SettingsModal.css';
 
 const MapPicker = lazy(() => import('./MapPicker'));
@@ -31,6 +32,13 @@ export default function SettingsModal({
     onImportNotes,
     onSetAutoStart,
     onSetStartMinimized,
+    onSetFontFamily,
+    onSetCustomThemeEnabled,
+    onSetCustomColor,
+    onSetSoundEnabled,
+    onSetDecorationsEnabled,
+    onSetHolidaysEnabled,
+    onSetHolidayCountry,
     themeKeys,
 }) {
     const isElectron = !!window.electronSettings;
@@ -183,6 +191,39 @@ export default function SettingsModal({
                         </div>
                     </section>
 
+                    {/* ── 🎨 Custom Theme ── */}
+                    <section className="settings-section">
+                        <h3 className="settings-section-title">{t('settings.customtheme')}</h3>
+                        <label className="settings-checkbox-row">
+                            <input
+                                type="checkbox"
+                                checked={settings.customThemeEnabled ?? false}
+                                onChange={(e) => onSetCustomThemeEnabled(e.target.checked)}
+                            />
+                            <span>{t('settings.customtheme.enable')}</span>
+                        </label>
+                        {settings.customThemeEnabled && (
+                            <div className="custom-theme-colors">
+                                {[
+                                    { key: 'bg', label: t('settings.customtheme.bg') },
+                                    { key: 'surface', label: t('settings.customtheme.surface') },
+                                    { key: 'accent', label: t('settings.customtheme.accent') },
+                                    { key: 'text', label: t('settings.customtheme.text') },
+                                ].map(({ key, label }) => (
+                                    <label key={key} className="custom-color-row">
+                                        <span className="custom-color-label">{label}</span>
+                                        <input
+                                            type="color"
+                                            value={settings.customColors?.[key] || '#000000'}
+                                            onChange={(e) => onSetCustomColor(key, e.target.value)}
+                                            className="custom-color-input"
+                                        />
+                                    </label>
+                                ))}
+                            </div>
+                        )}
+                    </section>
+
                     {/* ── 🌐 Language ── */}
                     <section className="settings-section">
                         <h3 className="settings-section-title">{t('settings.lang')}</h3>
@@ -199,6 +240,23 @@ export default function SettingsModal({
                                 onClick={() => onSetLanguage('ru')}
                                 aria-pressed={settings.language === 'ru'}
                             >🇷🇺 Русский</button>
+                        </div>
+                    </section>
+
+                    {/* ── 🔤 Font ── */}
+                    <section className="settings-section">
+                        <h3 className="settings-section-title">{t('settings.font')}</h3>
+                        <div className="settings-toggle-row">
+                            <button
+                                className={`settings-toggle-btn ${(settings.fontFamily || 'pixel') === 'pixel' ? 'active' : ''}`}
+                                onClick={() => onSetFontFamily('pixel')}
+                                aria-pressed={(settings.fontFamily || 'pixel') === 'pixel'}
+                            >{t('settings.font.pixel')}</button>
+                            <button
+                                className={`settings-toggle-btn ${settings.fontFamily === 'classic' ? 'active' : ''}`}
+                                onClick={() => onSetFontFamily('classic')}
+                                aria-pressed={settings.fontFamily === 'classic'}
+                            >{t('settings.font.classic')}</button>
                         </div>
                     </section>
 
@@ -274,6 +332,59 @@ export default function SettingsModal({
                             <button id="btn-week-sunday" className={`settings-toggle-btn ${settings.firstDayOfWeek === 0 ? 'active' : ''}`} onClick={() => onSetFirstDayOfWeek(0)} aria-pressed={settings.firstDayOfWeek === 0}>{t('settings.sunday')}</button>
                             <button id="btn-week-monday" className={`settings-toggle-btn ${settings.firstDayOfWeek === 1 ? 'active' : ''}`} onClick={() => onSetFirstDayOfWeek(1)} aria-pressed={settings.firstDayOfWeek === 1}>{t('settings.monday')}</button>
                         </div>
+                    </section>
+
+                    {/* ── 🔊 Sound ── */}
+                    <section className="settings-section">
+                        <h3 className="settings-section-title">{t('settings.sound')}</h3>
+                        <label className="settings-checkbox-row">
+                            <input
+                                type="checkbox"
+                                checked={settings.soundEnabled ?? false}
+                                onChange={(e) => onSetSoundEnabled(e.target.checked)}
+                            />
+                            <span>{t('settings.sound.enable')}</span>
+                        </label>
+                    </section>
+
+                    {/* ── 🌸 Decorations ── */}
+                    <section className="settings-section">
+                        <h3 className="settings-section-title">{t('settings.decorations')}</h3>
+                        <label className="settings-checkbox-row">
+                            <input
+                                type="checkbox"
+                                checked={settings.decorationsEnabled ?? true}
+                                onChange={(e) => onSetDecorationsEnabled(e.target.checked)}
+                            />
+                            <span>{t('settings.decorations.enable')}</span>
+                        </label>
+                    </section>
+
+                    {/* ── 🎉 Holidays ── */}
+                    <section className="settings-section">
+                        <h3 className="settings-section-title">{t('settings.holidays')}</h3>
+                        <label className="settings-checkbox-row">
+                            <input
+                                type="checkbox"
+                                checked={settings.holidaysEnabled ?? false}
+                                onChange={(e) => onSetHolidaysEnabled(e.target.checked)}
+                            />
+                            <span>{t('settings.holidays.enable')}</span>
+                        </label>
+                        {settings.holidaysEnabled && (
+                            <div className="holiday-country-grid">
+                                {HOLIDAY_COUNTRIES.map(({ code, en, ru, flag }) => (
+                                    <button
+                                        key={code}
+                                        className={`settings-toggle-btn holiday-country-btn ${settings.holidayCountry === code ? 'active' : ''}`}
+                                        onClick={() => onSetHolidayCountry(code)}
+                                        aria-pressed={settings.holidayCountry === code}
+                                    >
+                                        {flag} {settings.language === 'ru' ? ru : en}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </section>
 
                     {/* ── 🚀 Auto-start (Electron only) ── */}

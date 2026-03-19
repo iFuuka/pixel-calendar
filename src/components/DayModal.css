@@ -58,6 +58,188 @@
     animation: bounce 2s ease-in-out infinite;
 }
 
+.holiday-badge {
+    display: inline-block;
+    background: var(--clr-mint, #a5d6a7);
+    color: var(--clr-text);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 2px solid var(--clr-mint2, #66bb6a);
+    box-shadow: 2px 2px 0 var(--clr-mint2, #66bb6a);
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+/* ── Day decorations block ──────────────────────── */
+.meta-block {
+    padding: 0 !important;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    border: none !important;
+    box-shadow: none !important;
+    background: none !important;
+}
+
+.meta-line {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 10px;
+    background: var(--clr-bg);
+    border: 1.5px solid var(--clr-border);
+    border-radius: var(--radius);
+}
+
+/* Countdown spans full width */
+.meta-line:last-child {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    padding: 6px 10px;
+    gap: 8px;
+}
+
+.meta-line-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: var(--clr-text2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.meta-line-items {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    flex-wrap: wrap;
+}
+
+/* Mood & sticker buttons */
+.meta-btn {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    border: 1.5px solid transparent;
+    border-radius: 4px;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.1s, border-color 0.1s, transform 0.1s;
+}
+
+.meta-btn:hover {
+    background: var(--clr-panel);
+    transform: scale(1.1);
+}
+
+.meta-btn--active {
+    background: var(--clr-lavender);
+    border-color: var(--clr-lavender2);
+    box-shadow: 1px 1px 0 var(--clr-shadow);
+}
+
+/* Color dots */
+.meta-color-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--clr-border);
+    background: var(--dot-clr, var(--clr-surface));
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.1s, border-color 0.1s;
+}
+
+.meta-color-dot:hover {
+    transform: scale(1.2);
+}
+
+.meta-color-dot--active {
+    border-color: var(--clr-text);
+    box-shadow: 0 0 0 2px var(--clr-lavender2);
+}
+
+.meta-color-dot--none {
+    background: var(--clr-surface);
+    position: relative;
+}
+
+.meta-color-dot--none::after {
+    content: '—';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.5rem;
+    color: var(--clr-text2);
+    line-height: 1;
+}
+
+/* Countdown row items */
+.meta-line-items--cd {
+    gap: 5px;
+    flex: 1;
+    min-width: 0;
+}
+
+.meta-cd-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--clr-text);
+    background: var(--clr-lavender);
+    border: 1.5px solid var(--clr-lavender2);
+    border-radius: 12px;
+    padding: 2px 10px;
+}
+
+.meta-cd-pill-x {
+    background: none;
+    border: none;
+    font-size: 0.55rem;
+    color: var(--clr-text2);
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.5;
+}
+
+.meta-cd-pill-x:hover {
+    opacity: 1;
+    color: var(--clr-rose2);
+}
+
+.meta-cd-inline-input {
+    flex: 1;
+    min-width: 70px;
+    max-width: 160px;
+    font-size: 0.68rem;
+    padding: 3px 8px;
+    border: 1.5px dashed var(--clr-border);
+    border-radius: 12px;
+    background: transparent;
+    color: var(--clr-text2);
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.meta-cd-inline-input:focus {
+    border-color: var(--clr-selected);
+    border-style: solid;
+    color: var(--clr-text);
+    background: var(--clr-surface);
+}
+
 .modal-day-name {
     font-size: 1.3rem;
     font-weight: 700;

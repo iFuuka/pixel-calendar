@@ -42,6 +42,101 @@
   z-index: 190;
 }
 
+/* Focus mode */
+.app--focus .main-content {
+  justify-content: center;
+}
+
+.app--focus .content-column {
+  max-width: 800px;
+}
+
+/* Compact habits bar */
+.compact-bar {
+  background: var(--clr-surface);
+  padding: 4px 6px;
+}
+
+/* ── Countdown cards ─────────────────────── */
+.countdowns-section {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cd-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: var(--clr-surface);
+  flex: 1;
+  min-width: 160px;
+  position: relative;
+}
+
+.cd-card--today {
+  background: var(--clr-mint) !important;
+  border-color: var(--clr-mint2) !important;
+}
+
+.cd-card--past {
+  opacity: 0.55;
+}
+
+.cd-card-emoji {
+  font-size: 1.3rem;
+}
+
+.cd-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.cd-card-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cd-card-days {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--clr-text2);
+}
+
+.cd-card--today .cd-card-days {
+  color: var(--clr-text);
+}
+
+.cd-card-x {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: none;
+  border: none;
+  font-size: 0.6rem;
+  color: var(--clr-text2);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+  padding: 0;
+}
+
+.cd-card:hover .cd-card-x {
+  opacity: 0.5;
+}
+
+.cd-card-x:hover {
+  opacity: 1 !important;
+  color: var(--clr-rose2);
+}
+
 /* Background decorative pixel pattern */
 body::before {
   content: '';

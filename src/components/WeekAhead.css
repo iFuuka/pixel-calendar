@@ -1,0 +1,104 @@
+.week-ahead {
+    padding: 12px 14px;
+    background: var(--clr-surface);
+}
+
+.week-ahead-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--clr-text2);
+    margin-bottom: 10px;
+}
+
+.week-ahead-strip {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+}
+
+.week-day {
+    flex: 1;
+    min-width: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 4px 6px;
+    background: var(--clr-bg);
+    border: 1.5px solid var(--clr-border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: transform 0.1s, background 0.15s;
+    position: relative;
+    font-family: inherit;
+    color: var(--clr-text);
+}
+
+.week-day:hover {
+    transform: translateY(-2px);
+    background: var(--clr-panel);
+}
+
+.week-day--today {
+    background: var(--clr-rose);
+    border-color: var(--clr-rose2);
+}
+
+.week-day-name {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--clr-text2);
+    text-transform: uppercase;
+}
+
+.week-day--today .week-day-name {
+    color: var(--clr-text);
+}
+
+.week-day-num {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.week-day-weather {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+
+.week-day-temp {
+    font-size: 0.6rem;
+    color: var(--clr-text2);
+    font-weight: 600;
+}
+
+.week-day-notes-badge {
+    font-size: 0.55rem;
+    font-weight: 700;
+    background: var(--clr-lavender);
+    color: var(--clr-text);
+    padding: 1px 5px;
+    border-radius: 8px;
+    border: 1px solid var(--clr-lavender2);
+}
+
+.week-day-stickers {
+    display: flex;
+    gap: 1px;
+}
+
+.week-sticker-mini {
+    font-size: 0.6rem;
+}
+
+.week-day-color-dot {
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--day-label-clr, var(--clr-lavender2));
+}

@@ -7,9 +7,6 @@ import {
 import DayCell from './DayCell';
 import './CalendarGrid.css';
 
-const WEEKDAYS_SUN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const WEEKDAYS_MON = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
 export default function CalendarGrid({
     currentMonth,
     selectedDate,
@@ -17,7 +14,12 @@ export default function CalendarGrid({
     getWeatherForDate,
     hasNotes,
     weatherLoading,
-    firstDayOfWeek = 0,  // 0 = Sunday, 1 = Monday
+    firstDayOfWeek = 0,
+    getHoliday,
+    getDayMeta,
+    getMood,
+    onMoveNote,
+    lang,
     t,
 }) {
     const weekStartsOn = firstDayOfWeek === 1 ? 1 : 0;
@@ -37,14 +39,12 @@ export default function CalendarGrid({
 
     return (
         <div className="calendar-container pixel-border">
-            {/* Weekday headers */}
             <div className="weekday-headers">
                 {WEEKDAYS.map((d) => (
                     <div key={d} className="weekday-label">{d}</div>
                 ))}
             </div>
 
-            {/* Day grid */}
             <div className="calendar-grid">
                 {days.map((day) => {
                     const dateKey = format(day, 'yyyy-MM-dd');
@@ -52,6 +52,9 @@ export default function CalendarGrid({
                     const isSelected = selectedDate ? isSameDay(day, selectedDate) : false;
                     const weather = getWeatherForDate(dateKey);
                     const hasNote = hasNotes(dateKey);
+                    const holiday = getHoliday ? getHoliday(dateKey) : null;
+                    const dayMeta = getDayMeta ? getDayMeta(dateKey) : null;
+                    const dayMood = getMood ? getMood(dateKey) : null;
 
                     return (
                         <DayCell
@@ -64,6 +67,11 @@ export default function CalendarGrid({
                             weather={weather}
                             hasNote={hasNote}
                             weatherLoading={weatherLoading}
+                            holiday={holiday}
+                            dayMeta={dayMeta}
+                            mood={dayMood}
+                            onMoveNote={onMoveNote}
+                            lang={lang}
                             onClick={() => onDayClick(day)}
                         />
                     );

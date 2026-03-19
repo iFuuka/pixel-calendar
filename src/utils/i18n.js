@@ -85,6 +85,86 @@ export const translations = {
         'settings.startup': '🚀 Startup',
         'settings.autostart': 'Launch on system startup',
         'settings.startminimized': 'Start minimized to tray',
+        'settings.font': '🔤 Font',
+        'settings.font.pixel': 'Pixel',
+        'settings.font.classic': 'Classic',
+        'settings.sound': '🔊 Sound Effects',
+        'settings.sound.enable': 'Enable 8-bit sounds',
+        'settings.decorations': '🌸 Seasonal Decorations',
+        'settings.decorations.enable': 'Show seasonal animations',
+        'settings.holidays': '🎉 Public Holidays',
+        'settings.holidays.enable': 'Show public holidays',
+        'settings.holidays.country': 'Country',
+        'settings.holidays.off': 'Off',
+
+        // Day meta
+        'daymeta.color': 'Color Label',
+        'daymeta.color.none': 'None',
+        'daymeta.color.red': 'Important',
+        'daymeta.color.blue': 'Deadline',
+        'daymeta.color.green': 'Vacation',
+        'daymeta.color.yellow': 'Birthday',
+        'daymeta.color.purple': 'Custom',
+        'daymeta.stickers': 'Stickers',
+        'daymeta.stickers.max': 'Max 3',
+
+        // Stats
+        'stats.title': 'Statistics',
+        'stats.notes.total': 'Total Notes',
+        'stats.notes.month': 'Notes This Month',
+        'stats.streak.current': 'Current Streak',
+        'stats.streak.longest': 'Longest Streak',
+        'stats.days': 'days',
+        'stats.tags.top': 'Top Tags',
+        'stats.heatmap': 'Activity',
+        'stats.nodata': 'Add notes to see stats!',
+
+        // Week ahead
+        'week.ahead': 'Week Ahead',
+        'week.today': 'Today',
+
+        // Mood
+        'mood.title': 'Mood',
+        'mood.fire': 'On fire',
+        'mood.happy': 'Happy',
+        'mood.calm': 'Calm',
+        'mood.neutral': 'Neutral',
+        'mood.sad': 'Sad',
+        'mood.tired': 'Tired',
+        'mood.angry': 'Angry',
+
+        // Habits
+        'habits.title': 'Habits',
+        'habits.name': 'Habit name...',
+        'habits.add': 'Add',
+        'habits.empty': 'No habits yet. Press + to add one!',
+
+        // Countdown
+        'countdown.title': 'Countdowns',
+        'countdown.add': 'Add Countdown',
+        'countdown.label': 'Event name...',
+        'countdown.days.left': 'days left',
+        'countdown.today': 'Today!',
+        'countdown.passed': 'days ago',
+        'countdown.empty': 'No countdowns',
+
+        // Focus mode
+        'focus.enter': 'Focus Mode',
+        'focus.exit': 'Exit Focus',
+
+        // Export
+        'export.image': 'Export as Image',
+
+        // Custom theme
+        'settings.customtheme': '🎨 Custom Theme',
+        'settings.customtheme.enable': 'Use custom colors',
+        'settings.customtheme.bg': 'Background',
+        'settings.customtheme.surface': 'Surface',
+        'settings.customtheme.accent': 'Accent',
+        'settings.customtheme.text': 'Text',
+
+        // Keyboard
+        'keyboard.hint': '← → navigate months, ↑↓ days, Enter open, N new note',
 
         // Theme names
         'theme.vanilla-sky': 'Vanilla Sky',
@@ -253,6 +333,86 @@ export const translations = {
         'settings.startup': '🚀 Запуск',
         'settings.autostart': 'Запускать при старте системы',
         'settings.startminimized': 'Запуск свёрнутым в трей',
+        'settings.font': '🔤 Шрифт',
+        'settings.font.pixel': 'Пиксельный',
+        'settings.font.classic': 'Классический',
+        'settings.sound': '🔊 Звуковые эффекты',
+        'settings.sound.enable': 'Включить 8-бит звуки',
+        'settings.decorations': '🌸 Сезонные украшения',
+        'settings.decorations.enable': 'Показывать сезонные анимации',
+        'settings.holidays': '🎉 Праздничные дни',
+        'settings.holidays.enable': 'Показывать праздники',
+        'settings.holidays.country': 'Страна',
+        'settings.holidays.off': 'Выкл',
+
+        // Day meta
+        'daymeta.color': 'Цветная метка',
+        'daymeta.color.none': 'Нет',
+        'daymeta.color.red': 'Важное',
+        'daymeta.color.blue': 'Дедлайн',
+        'daymeta.color.green': 'Отпуск',
+        'daymeta.color.yellow': 'День рождения',
+        'daymeta.color.purple': 'Своё',
+        'daymeta.stickers': 'Стикеры',
+        'daymeta.stickers.max': 'Макс. 3',
+
+        // Stats
+        'stats.title': 'Статистика',
+        'stats.notes.total': 'Всего заметок',
+        'stats.notes.month': 'Заметок за месяц',
+        'stats.streak.current': 'Текущая серия',
+        'stats.streak.longest': 'Лучшая серия',
+        'stats.days': 'дн.',
+        'stats.tags.top': 'Популярные теги',
+        'stats.heatmap': 'Активность',
+        'stats.nodata': 'Добавьте заметки для статистики!',
+
+        // Week ahead
+        'week.ahead': 'Неделя вперёд',
+        'week.today': 'Сегодня',
+
+        // Mood
+        'mood.title': 'Настроение',
+        'mood.fire': 'Огонь',
+        'mood.happy': 'Радость',
+        'mood.calm': 'Спокойствие',
+        'mood.neutral': 'Нейтрально',
+        'mood.sad': 'Грусть',
+        'mood.tired': 'Усталость',
+        'mood.angry': 'Злость',
+
+        // Habits
+        'habits.title': 'Привычки',
+        'habits.name': 'Название привычки...',
+        'habits.add': 'Добавить',
+        'habits.empty': 'Привычок пока нет. Нажмите + чтобы добавить!',
+
+        // Countdown
+        'countdown.title': 'Обратный отсчёт',
+        'countdown.add': 'Добавить отсчёт',
+        'countdown.label': 'Название события...',
+        'countdown.days.left': 'дн. осталось',
+        'countdown.today': 'Сегодня!',
+        'countdown.passed': 'дн. назад',
+        'countdown.empty': 'Нет отсчётов',
+
+        // Focus mode
+        'focus.enter': 'Фокус',
+        'focus.exit': 'Выйти',
+
+        // Export
+        'export.image': 'Экспорт картинки',
+
+        // Custom theme
+        'settings.customtheme': '🎨 Своя тема',
+        'settings.customtheme.enable': 'Использовать свои цвета',
+        'settings.customtheme.bg': 'Фон',
+        'settings.customtheme.surface': 'Поверхность',
+        'settings.customtheme.accent': 'Акцент',
+        'settings.customtheme.text': 'Текст',
+
+        // Keyboard
+        'keyboard.hint': '← → месяцы, ↑↓ дни, Enter открыть, N новая заметка',
 
         // Theme names
         'theme.vanilla-sky': 'Ванильное небо',

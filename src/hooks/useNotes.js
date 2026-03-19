@@ -114,6 +114,26 @@ export function useNotes() {
         });
     }, []);
 
+    const moveNote = useCallback((fromDateKey, toDateKey, noteId) => {
+        if (fromDateKey === toDateKey) return;
+        setAllNotes((prev) => {
+            const fromNotes = prev[fromDateKey] ?? [];
+            const note = fromNotes.find(n => n.id === noteId);
+            if (!note) return prev;
+            const next = { ...prev };
+            // Remove from source
+            const remaining = fromNotes.filter(n => n.id !== noteId);
+            if (remaining.length === 0) {
+                delete next[fromDateKey];
+            } else {
+                next[fromDateKey] = remaining;
+            }
+            // Add to target
+            next[toDateKey] = [...(next[toDateKey] ?? []), note];
+            return next;
+        });
+    }, []);
+
     const hasNotes = useCallback(
         (dateKey) => (allNotes[dateKey]?.length ?? 0) > 0,
         [allNotes]
@@ -159,7 +179,7 @@ export function useNotes() {
     }, [allNotes]);
 
     return {
-        allNotes, getNotesForDate, addNote, editNote, deleteNote,
+        allNotes, getNotesForDate, addNote, editNote, deleteNote, moveNote,
         hasNotes, clearAllNotes, importNotes, updateNoteTags, updateNoteReminder,
         markReminderNotified, allTags,
     };

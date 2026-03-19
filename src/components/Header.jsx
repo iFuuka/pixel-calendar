@@ -1,8 +1,8 @@
 import React from 'react';
-import { GearIcon } from './PixelIcons';
+import { GearIcon, StatsIcon } from './PixelIcons';
 import './Header.css';
 
-export default function Header({ currentMonth, onPrev, onNext, locationName, onOpenSettings, t }) {
+export default function Header({ currentMonth, onPrev, onNext, locationName, onOpenSettings, onOpenStats, onExportImage, focusMode, onToggleFocus, t }) {
     const monthKey = 'month.' + ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'][currentMonth.getMonth()];
     const month = t ? t(monthKey) : currentMonth.toLocaleString('default', { month: 'long' });
     const year = currentMonth.getFullYear();
@@ -13,7 +13,7 @@ export default function Header({ currentMonth, onPrev, onNext, locationName, onO
                 <span className="header-icon">🌸</span>
                 <div className="header-title-group">
                     <h1 className="header-title">{t ? t('app.title') : 'Pixel Calendar'}</h1>
-                    <span className="header-location">📍 {locationName}</span>
+                    {!focusMode && <span className="header-location">📍 {locationName}</span>}
                 </div>
             </div>
 
@@ -42,15 +42,40 @@ export default function Header({ currentMonth, onPrev, onNext, locationName, onO
 
             <div className="header-right">
                 <button
-                    id="btn-open-settings"
                     className="settings-btn btn pixel-border"
-                    onClick={onOpenSettings}
-                    aria-label={t ? t('settings.title', 'Settings') : 'Settings'}
-                    title={t ? t('settings.title', 'Settings') : 'Settings'}
+                    onClick={onToggleFocus}
+                    title={t ? t(focusMode ? 'focus.exit' : 'focus.enter') : 'Focus'}
                 >
-                    <GearIcon size={18} />
-                    <span className="settings-btn-label">{t ? t('settings.title') : 'Settings'}</span>
+                    {focusMode ? '⊞' : '◎'}
                 </button>
+                {!focusMode && (
+                    <>
+                        <button
+                            className="settings-btn btn pixel-border"
+                            onClick={onExportImage}
+                            title={t ? t('export.image', 'Export as Image') : 'Export'}
+                        >
+                            📷
+                        </button>
+                        <button
+                            className="settings-btn btn pixel-border"
+                            onClick={onOpenStats}
+                            title={t ? t('stats.title', 'Statistics') : 'Statistics'}
+                        >
+                            <StatsIcon size={18} />
+                        </button>
+                        <button
+                            id="btn-open-settings"
+                            className="settings-btn btn pixel-border"
+                            onClick={onOpenSettings}
+                            aria-label={t ? t('settings.title', 'Settings') : 'Settings'}
+                            title={t ? t('settings.title', 'Settings') : 'Settings'}
+                        >
+                            <GearIcon size={18} />
+                            <span className="settings-btn-label">{t ? t('settings.title') : 'Settings'}</span>
+                        </button>
+                    </>
+                )}
             </div>
         </header>
     );

@@ -1,0 +1,118 @@
+.habit-tracker-compact {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    flex-wrap: wrap;
+}
+
+.habit-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--clr-text2);
+    white-space: nowrap;
+}
+
+.habit-chips {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.habit-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    font-family: inherit;
+    border: 1.5px solid var(--clr-border);
+    border-radius: 12px;
+    background: var(--clr-bg);
+    color: var(--clr-text);
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s;
+    white-space: nowrap;
+}
+
+.habit-chip:hover {
+    border-color: var(--clr-lavender2);
+}
+
+.habit-chip--done {
+    background: var(--clr-mint);
+    border-color: var(--clr-mint2);
+}
+
+.habit-chip--done .habit-chip-name {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.habit-chip-name {
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.habit-chip-streak {
+    font-size: 0.6rem;
+    opacity: 0.8;
+}
+
+.habit-chip-x {
+    font-size: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.1s;
+    margin-left: 2px;
+}
+
+.habit-chip:hover .habit-chip-x {
+    opacity: 0.6;
+}
+
+.habit-chip-x:hover {
+    opacity: 1 !important;
+    color: var(--clr-rose2);
+}
+
+.habit-chip--add {
+    border-style: dashed;
+    color: var(--clr-text2);
+    font-size: 0.8rem;
+    padding: 3px 10px;
+}
+
+.habit-inline-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.habit-inline-input {
+    width: 80px;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border: 1.5px solid var(--clr-border);
+    border-radius: 10px;
+    background: var(--clr-bg);
+    color: var(--clr-text);
+    font-family: inherit;
+    outline: none;
+}
+
+.habit-inline-input:focus {
+    border-color: var(--clr-selected);
+}
+
+.habit-inline-ok {
+    font-size: 0.7rem;
+    background: none;
+    border: none;
+    color: var(--clr-selected);
+    cursor: pointer;
+    font-weight: 700;
+    padding: 0;
+}

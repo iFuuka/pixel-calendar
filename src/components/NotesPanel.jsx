@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { REMINDER_INTERVALS } from '../hooks/useNotes';
+import MarkdownText from './MarkdownText';
 import './NotesPanel.css';
 
 /* ── Tag Input (shared) ──────────────────────────────────────────── */
@@ -161,7 +162,7 @@ function ReminderPicker({ reminder, onChange, t }) {
 }
 
 /* ── Note Item ───────────────────────────────────────────────────── */
-function NoteItem({ note, onEdit, onDelete, autoEdit, onUpdateTags, onUpdateReminder, allTags, t }) {
+function NoteItem({ note, dateKey, onEdit, onDelete, autoEdit, onUpdateTags, onUpdateReminder, allTags, t }) {
     const tr = t || ((k, fb) => fb || k);
     const [editing, setEditing] = useState(autoEdit || false);
     const [draft, setDraft] = useState(note.text);
@@ -192,8 +193,30 @@ function NoteItem({ note, onEdit, onDelete, autoEdit, onUpdateTags, onUpdateRemi
     const tags = note.tags ?? [];
     const reminder = note.reminder ?? { enabled: false, intervals: [], notified: [] };
 
+    function handleDragStart(e) {
+        e.dataTransfer.setData('text/plain', JSON.stringify({
+            type: 'note', dateKey, noteId: note.id,
+        }));
+        e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleCheckToggle(lineIndex) {
+        const lines = note.text.split('\n');
+        const line = lines[lineIndex];
+        if (/- \[ \]/.test(line)) {
+            lines[lineIndex] = line.replace('- [ ]', '- [x]');
+        } else if (/- \[x\]/i.test(line)) {
+            lines[lineIndex] = line.replace(/- \[x\]/i, '- [ ]');
+        }
+        onEdit(note.id, lines.join('\n'));
+    }
+
     return (
-        <li className={`note-item${deleting ? ' note-item--deleting' : ''}`}>
+        <li
+            className={`note-item${deleting ? ' note-item--deleting' : ''}`}
+            draggable
+            onDragStart={handleDragStart}
+        >
             {editing ? (
                 <div className="note-edit-row">
                     <textarea
@@ -217,7 +240,9 @@ function NoteItem({ note, onEdit, onDelete, autoEdit, onUpdateTags, onUpdateRemi
             ) : (
                 <div className="note-view-row">
                     <div className="note-content">
-                        <p className="note-text">{note.text}</p>
+                        <div className="note-text">
+                            <MarkdownText text={note.text} onToggleCheck={handleCheckToggle} />
+                        </div>
                         {tags.length > 0 && (
                             <div className="note-tags-display">
                                 {tags.map((tag) => (
@@ -375,6 +400,7 @@ export default function NotesPanel({
                         <NoteItem
                             key={note.id}
                             note={note}
+                            dateKey={dateKey}
                             autoEdit={autoEditNoteId === note.id}
                             onEdit={(id, text) => onEdit(dateKey, id, text)}
                             onDelete={(id) => onDelete(dateKey, id)}

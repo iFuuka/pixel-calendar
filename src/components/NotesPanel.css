@@ -129,6 +129,46 @@
     line-height: 1.5;
 }
 
+/* Markdown styles */
+.md-text strong { font-weight: 700; }
+.md-text em { font-style: italic; }
+.md-text del { text-decoration: line-through; opacity: 0.6; }
+.md-inline-code {
+    background: var(--clr-bg);
+    padding: 1px 4px;
+    border-radius: 2px;
+    font-size: 0.78rem;
+    border: 1px solid var(--clr-border);
+}
+
+.md-check-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.md-checkbox {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--clr-selected);
+    cursor: pointer;
+}
+
+.md-check-done {
+    text-decoration: line-through;
+    opacity: 0.55;
+}
+
+/* Draggable note cursor */
+.note-item[draggable="true"] {
+    cursor: grab;
+}
+
+.note-item[draggable="true"]:active {
+    cursor: grabbing;
+}
+
 .note-actions {
     display: flex;
     gap: 4px;

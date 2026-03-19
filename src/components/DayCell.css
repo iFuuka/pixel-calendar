@@ -116,18 +116,94 @@
     margin-top: 6px;
 }
 
-/* Note dot indicator */
+/* ── Note indicator: left accent bar on the cell ─────────────── */
+.day-cell--has-note {
+    border-left: 3.5px solid var(--clr-rose2);
+    box-shadow: inset 3px 0 8px -4px var(--clr-rose2);
+}
+
+.day-cell--has-note:not(.day-cell--selected):not(.day-cell--today) {
+    background-image: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--clr-rose) 30%, transparent) 0%,
+        transparent 40%
+    );
+}
+
+/* Note dot indicator — larger, bottom-right badge */
 .note-dot {
     position: absolute;
-    bottom: 5px;
-    right: 6px;
-    width: 7px;
-    height: 7px;
+    bottom: 4px;
+    right: 5px;
+    width: 9px;
+    height: 9px;
     background: var(--clr-rose2);
     border-radius: 50%;
-    border: 1.5px solid var(--clr-today);
-    box-shadow: 0 0 4px var(--clr-rose2);
+    border: 1.5px solid var(--clr-surface);
+    box-shadow: 0 0 6px var(--clr-rose2), 0 1px 3px rgba(0, 0, 0, 0.15);
     animation: pulse 2s ease-in-out infinite;
+}
+
+/* ── Holiday indicator ─────────────────────────────────────── */
+.day-cell--holiday {
+    border-top: 2.5px solid var(--clr-mint2);
+}
+
+.day-holiday-label {
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 0.55rem;
+    line-height: 1.2;
+    color: var(--clr-text);
+    font-weight: 500;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 1px 3px;
+    opacity: 0.75;
+}
+
+/* ── Color label bar ───────────────────────────────────────── */
+.day-color-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--day-label-clr, transparent);
+}
+
+/* ── Stickers ─────────────────────────────────────────────── */
+.day-stickers {
+    display: flex;
+    gap: 1px;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    z-index: 1;
+}
+
+.day-sticker {
+    font-size: 0.65rem;
+    line-height: 1;
+}
+
+/* ── Mood emoji ───────────────────────────────────────────── */
+.day-mood {
+    position: absolute;
+    bottom: 3px;
+    left: 4px;
+    font-size: 0.7rem;
+    line-height: 1;
+    z-index: 1;
+}
+
+/* ── Drag & drop ──────────────────────────────────────────── */
+.day-cell--drag-over {
+    border: 2px dashed var(--clr-selected) !important;
+    background: color-mix(in srgb, var(--clr-lavender) 30%, var(--clr-surface)) !important;
+    transform: scale(1.03);
 }
 
 /* Weekend columns — use theme panel colour (slightly tinted) */
