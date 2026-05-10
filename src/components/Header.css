@@ -39,6 +39,52 @@
     letter-spacing: 0.5px;
 }
 
+.header-location-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.weather-refresh {
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--clr-mint2);
+    border-radius: 4px;
+    background: var(--clr-mint);
+    color: var(--clr-text);
+    cursor: pointer;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+.weather-refresh:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.weather-refresh--error {
+    border-color: var(--clr-peach2);
+    background: var(--clr-peach);
+}
+
+.weather-status {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.62rem;
+    color: var(--clr-text2);
+}
+
+.weather-status--cache,
+.weather-status--error {
+    color: var(--clr-text);
+}
+
 .header-nav {
     display: flex;
     align-items: center;

@@ -13,9 +13,13 @@ export default function DayCell({
     weather,
     hasNote,
     weatherLoading,
+    tempUnit = 'C',
+    density = 'detailed',
     holiday,
     dayMeta,
     mood,
+    searchActive = false,
+    searchMatch = false,
     onMoveNote,
     lang,
     onClick,
@@ -29,8 +33,23 @@ export default function DayCell({
     const holidayTitle = holidayNames ? holidayNames.join(', ') : undefined;
     const color = dayMeta?.color || null;
     const stickers = dayMeta?.stickers || [];
+    const isCompact = density === 'compact';
+    const isDetailed = density === 'detailed';
+    const showHolidayText = !isCompact && holidayNames;
+    const showStickers = !isCompact && stickers.length > 0;
+    const showMood = !isCompact && mood;
+    const visibleStickers = isDetailed ? stickers : stickers.slice(0, 2);
+    const tempMax = weather?.tempMax;
+    const tempMin = weather?.tempMin;
+    const displayMax = tempUnit === 'F' && tempMax !== undefined
+        ? Math.round(tempMax * 9 / 5 + 32)
+        : tempMax;
+    const displayMin = tempUnit === 'F' && tempMin !== undefined
+        ? Math.round(tempMin * 9 / 5 + 32)
+        : tempMin;
 
     let cellClass = 'day-cell';
+    cellClass += ` day-cell--${density}`;
     if (!inMonth) cellClass += ' day-cell--faded';
     if (isToday) cellClass += ' day-cell--today';
     if (isSelected) cellClass += ' day-cell--selected';
@@ -38,6 +57,7 @@ export default function DayCell({
     if (holiday && inMonth) cellClass += ' day-cell--holiday';
     if (color && inMonth) cellClass += ' day-cell--labeled';
     if (dragOver) cellClass += ' day-cell--drag-over';
+    if (searchActive && inMonth) cellClass += searchMatch ? ' day-cell--search-match' : ' day-cell--search-dim';
 
     // Drag & drop handlers
     function handleDragOver(e) {
@@ -72,11 +92,14 @@ export default function DayCell({
             }}
             title={holidayTitle}
         >
-            <span className="day-number">{dayNum}</span>
+            <div className="day-cell-top">
+                <span className="day-number">{dayNum}</span>
+                {!showHolidayText && holidayNames && inMonth && <span className="day-holiday-dot" title={holidayTitle}>•</span>}
+            </div>
 
-            {holidayNames && inMonth && (
+            {showHolidayText && inMonth && (
                 <span className="day-holiday-label">
-                    {holidayNames.length <= 2
+                    {isDetailed && holidayNames.length <= 2
                         ? holidayNames.join(' / ')
                         : `${holidayNames[0]} +${holidayNames.length - 1}`
                     }
@@ -85,9 +108,12 @@ export default function DayCell({
 
             {inMonth && !weatherLoading && weatherInfo && (
                 <div className="day-weather">
-                    <WeatherIcon type={weatherInfo.icon} size={22} />
-                    {weather.tempMax !== undefined && (
-                        <span className="day-temp">{weather.tempMax}°</span>
+                    <WeatherIcon type={weatherInfo.icon} size={24} />
+                    {displayMax !== undefined && (
+                        <span className="day-temp">
+                            {displayMax}°
+                            {displayMin !== undefined && <span className="day-temp-min">/{displayMin}°</span>}
+                        </span>
                     )}
                 </div>
             )}
@@ -97,16 +123,19 @@ export default function DayCell({
             )}
 
             {/* Stickers */}
-            {stickers.length > 0 && inMonth && (
+            {showStickers && inMonth && (
                 <div className="day-stickers">
-                    {stickers.map((s, i) => (
+                    {visibleStickers.map((s, i) => (
                         <span key={i} className="day-sticker">{s}</span>
                     ))}
+                    {!isDetailed && stickers.length > visibleStickers.length && (
+                        <span className="day-sticker day-sticker--more">+{stickers.length - visibleStickers.length}</span>
+                    )}
                 </div>
             )}
 
             {/* Mood emoji */}
-            {mood && inMonth && (
+            {showMood && inMonth && (
                 <span className="day-mood" aria-label="mood">{mood}</span>
             )}
 

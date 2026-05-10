@@ -17,11 +17,15 @@ export function useHabits() {
     const [data, setData] = useState(load);
 
     useEffect(() => {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch {}
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } catch {
+            // Storage may be unavailable or full.
+        }
     }, [data]);
 
     const habits = data.habits || [];
-    const checks = data.checks || {};
+    const checks = useMemo(() => data.checks || {}, [data.checks]);
 
     const addHabit = useCallback((name, icon = '✅') => {
         const id = `h-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;

@@ -1,118 +1,183 @@
-.habit-tracker-compact {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 10px;
-    flex-wrap: wrap;
+.habit-tracker {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--clr-border);
+    border-radius: 6px;
+    background: var(--clr-surface);
+    box-shadow: 3px 3px 0 var(--clr-shadow);
 }
 
-.habit-label {
-    font-size: 0.7rem;
-    font-weight: 700;
+.habit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.habit-title {
+    margin: 0;
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: var(--clr-text);
+}
+
+.habit-subtitle {
+    display: block;
+    margin-top: 3px;
+    font-size: 0.64rem;
     color: var(--clr-text2);
-    white-space: nowrap;
+    line-height: 1.3;
 }
 
-.habit-chips {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.habit-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 3px 8px;
-    font-size: 0.7rem;
-    font-weight: 600;
+.habit-add-btn,
+.habit-save-btn,
+.habit-cancel-btn,
+.habit-remove {
     font-family: inherit;
-    border: 1.5px solid var(--clr-border);
-    border-radius: 12px;
+    cursor: pointer;
+}
+
+.habit-add-btn {
+    width: 34px;
+    height: 34px;
+    border: 2px solid var(--clr-lavender2);
+    border-radius: 6px;
+    background: var(--clr-lavender);
+    color: var(--clr-text);
+    font-size: 1rem;
+    font-weight: 800;
+    box-shadow: 2px 2px 0 var(--clr-lavender2);
+}
+
+.habit-add-row {
+    display: grid;
+    grid-template-columns: minmax(140px, 1fr) auto auto;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.habit-input {
+    min-width: 0;
+    padding: 8px 10px;
+    border: 2px solid var(--clr-border);
+    border-radius: 6px;
     background: var(--clr-bg);
     color: var(--clr-text);
-    cursor: pointer;
-    transition: background 0.12s, border-color 0.12s;
-    white-space: nowrap;
+    font-family: inherit;
+    font-size: 0.75rem;
+    outline: none;
 }
 
-.habit-chip:hover {
+.habit-input:focus {
+    border-color: var(--clr-selected);
+}
+
+.habit-save-btn,
+.habit-cancel-btn {
+    min-width: 38px;
+    border: 2px solid var(--clr-mint2);
+    border-radius: 6px;
+    background: var(--clr-mint);
+    color: var(--clr-text);
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.habit-cancel-btn {
+    border-color: var(--clr-peach2);
+    background: var(--clr-peach);
+}
+
+.habit-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px;
+}
+
+.habit-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 6px;
+    min-height: 42px;
+    padding: 6px;
+    border: 2px solid var(--clr-border);
+    border-radius: 6px;
+    background: var(--clr-bg);
+    transition: transform 0.12s, border-color 0.12s, background 0.12s;
+}
+
+.habit-card:hover {
+    transform: translateY(-1px);
     border-color: var(--clr-lavender2);
 }
 
-.habit-chip--done {
+.habit-card--done {
     background: var(--clr-mint);
     border-color: var(--clr-mint2);
 }
 
-.habit-chip--done .habit-chip-name {
-    text-decoration: line-through;
-    opacity: 0.6;
-}
-
-.habit-chip-name {
-    max-width: 80px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.habit-chip-streak {
-    font-size: 0.6rem;
-    opacity: 0.8;
-}
-
-.habit-chip-x {
-    font-size: 0.5rem;
-    opacity: 0;
-    transition: opacity 0.1s;
-    margin-left: 2px;
-}
-
-.habit-chip:hover .habit-chip-x {
-    opacity: 0.6;
-}
-
-.habit-chip-x:hover {
-    opacity: 1 !important;
-    color: var(--clr-rose2);
-}
-
-.habit-chip--add {
-    border-style: dashed;
-    color: var(--clr-text2);
-    font-size: 0.8rem;
-    padding: 3px 10px;
-}
-
-.habit-inline-add {
-    display: inline-flex;
+.habit-check {
+    display: flex;
     align-items: center;
-    gap: 3px;
-}
-
-.habit-inline-input {
-    width: 80px;
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    border: 1.5px solid var(--clr-border);
-    border-radius: 10px;
-    background: var(--clr-bg);
+    gap: 8px;
+    min-width: 0;
+    border: 0;
+    background: transparent;
     color: var(--clr-text);
     font-family: inherit;
-    outline: none;
-}
-
-.habit-inline-input:focus {
-    border-color: var(--clr-selected);
-}
-
-.habit-inline-ok {
-    font-size: 0.7rem;
-    background: none;
-    border: none;
-    color: var(--clr-selected);
+    text-align: left;
     cursor: pointer;
-    font-weight: 700;
-    padding: 0;
+}
+
+.habit-check-box {
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--clr-lavender2);
+    border-radius: 5px;
+    background: var(--clr-surface);
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: var(--clr-selected);
+}
+
+.habit-card-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.76rem;
+    font-weight: 800;
+}
+
+.habit-card--done .habit-card-name {
+    text-decoration: line-through;
+    opacity: 0.68;
+}
+
+.habit-streak {
+    font-size: 0.66rem;
+    color: var(--clr-text2);
+    white-space: nowrap;
+}
+
+.habit-remove {
+    width: 24px;
+    height: 24px;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--clr-text2);
+    font-size: 0.8rem;
+    font-weight: 900;
+}
+
+.habit-remove:hover {
+    background: var(--clr-peach);
+    color: var(--clr-text);
 }

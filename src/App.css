@@ -30,7 +30,72 @@
   width: 100%;
 }
 
+.calendar-toolbar {
+  display: grid;
+  grid-template-columns: auto minmax(180px, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--clr-surface);
+}
+
+.calendar-toolbar-left,
+.calendar-view-toggle,
+.calendar-layer-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.calendar-tool-btn,
+.calendar-layer-btn {
+  border: 2px solid var(--clr-border);
+  border-radius: 6px;
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.calendar-tool-btn--active,
+.calendar-layer-btn--active {
+  background: var(--clr-mint);
+  border-color: var(--clr-mint2);
+  box-shadow: 2px 2px 0 var(--clr-mint2);
+}
+
+.calendar-search {
+  min-width: 0;
+  width: 100%;
+  padding: 8px 10px;
+  border: 2px solid var(--clr-border);
+  border-radius: 6px;
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  font-family: inherit;
+  font-size: 0.72rem;
+  outline: none;
+}
+
+.calendar-search:focus {
+  border-color: var(--clr-selected);
+}
+
+@media (max-width: 760px) {
+  .calendar-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
+
 .dashboard-section {
+  width: 100%;
+}
+
+.week-ahead-section {
   width: 100%;
 }
 
@@ -53,8 +118,12 @@
 
 /* Compact habits bar */
 .compact-bar {
-  background: var(--clr-surface);
-  padding: 4px 6px;
+  width: 100%;
+  max-width: 100%;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
 }
 
 /* ── Countdown cards ─────────────────────── */

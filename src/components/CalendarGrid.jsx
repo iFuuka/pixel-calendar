@@ -9,16 +9,22 @@ import './CalendarGrid.css';
 
 export default function CalendarGrid({
     currentMonth,
+    viewMode = 'month',
     selectedDate,
     onDayClick,
     getWeatherForDate,
     hasNotes,
     weatherLoading,
     firstDayOfWeek = 0,
+    tempUnit = 'C',
+    density = 'detailed',
     getHoliday,
     getDayMeta,
     getMood,
     onMoveNote,
+    layers = { weather: true, holidays: true, notes: true, meta: true },
+    searchActive = false,
+    getSearchMatch,
     lang,
     t,
 }) {
@@ -32,10 +38,12 @@ export default function CalendarGrid({
     const WEEKDAYS = t ? keys.map((k, i) => t(k) || labels[i]) : labels;
 
     const days = useMemo(() => {
-        const start = startOfWeek(startOfMonth(currentMonth), { weekStartsOn });
-        const end = endOfWeek(endOfMonth(currentMonth), { weekStartsOn });
+        const baseStart = viewMode === 'week' ? currentMonth : startOfMonth(currentMonth);
+        const baseEnd = viewMode === 'week' ? currentMonth : endOfMonth(currentMonth);
+        const start = startOfWeek(baseStart, { weekStartsOn });
+        const end = endOfWeek(baseEnd, { weekStartsOn });
         return eachDayOfInterval({ start, end });
-    }, [currentMonth, weekStartsOn]);
+    }, [currentMonth, viewMode, weekStartsOn]);
 
     return (
         <div className="calendar-container pixel-border">
@@ -45,16 +53,17 @@ export default function CalendarGrid({
                 ))}
             </div>
 
-            <div className="calendar-grid">
+            <div className={`calendar-grid ${viewMode === 'week' ? 'calendar-grid--week' : ''}`}>
                 {days.map((day) => {
                     const dateKey = format(day, 'yyyy-MM-dd');
                     const inMonth = isSameMonth(day, currentMonth);
                     const isSelected = selectedDate ? isSameDay(day, selectedDate) : false;
-                    const weather = getWeatherForDate(dateKey);
-                    const hasNote = hasNotes(dateKey);
-                    const holiday = getHoliday ? getHoliday(dateKey) : null;
-                    const dayMeta = getDayMeta ? getDayMeta(dateKey) : null;
-                    const dayMood = getMood ? getMood(dateKey) : null;
+                    const weather = layers.weather ? getWeatherForDate(dateKey) : null;
+                    const hasNote = layers.notes ? hasNotes(dateKey) : false;
+                    const holiday = layers.holidays && getHoliday ? getHoliday(dateKey) : null;
+                    const dayMeta = layers.meta && getDayMeta ? getDayMeta(dateKey) : null;
+                    const dayMood = layers.meta && getMood ? getMood(dateKey) : null;
+                    const searchMatch = searchActive && getSearchMatch ? getSearchMatch(dateKey) : false;
 
                     return (
                         <DayCell
@@ -67,9 +76,13 @@ export default function CalendarGrid({
                             weather={weather}
                             hasNote={hasNote}
                             weatherLoading={weatherLoading}
+                            tempUnit={tempUnit}
+                            density={density}
                             holiday={holiday}
                             dayMeta={dayMeta}
                             mood={dayMood}
+                            searchActive={searchActive}
+                            searchMatch={searchMatch}
                             onMoveNote={onMoveNote}
                             lang={lang}
                             onClick={() => onDayClick(day)}

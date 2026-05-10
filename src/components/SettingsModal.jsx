@@ -36,10 +36,11 @@ export default function SettingsModal({
     onSetCustomThemeEnabled,
     onSetCustomColor,
     onSetSoundEnabled,
+    onSetWeatherAlertsEnabled,
+    onSetUpdateAlertsEnabled,
     onSetDecorationsEnabled,
     onSetHolidaysEnabled,
     onSetHolidayCountry,
-    themeKeys,
 }) {
     const isElectron = !!window.electronSettings;
     const [cityInput, setCityInput] = useState(settings.city || '');
@@ -344,6 +345,32 @@ export default function SettingsModal({
                                 onChange={(e) => onSetSoundEnabled(e.target.checked)}
                             />
                             <span>{t('settings.sound.enable')}</span>
+                        </label>
+                    </section>
+
+                    {/* ── Weather Alerts ── */}
+                    <section className="settings-section">
+                        <h3 className="settings-section-title">{t('settings.weatheralerts')}</h3>
+                        <label className="settings-checkbox-row">
+                            <input
+                                type="checkbox"
+                                checked={settings.weatherAlertsEnabled ?? true}
+                                onChange={(e) => onSetWeatherAlertsEnabled(e.target.checked)}
+                            />
+                            <span>{t('settings.weatheralerts.enable')}</span>
+                        </label>
+                    </section>
+
+                    {/* ── Update Alerts ── */}
+                    <section className="settings-section">
+                        <h3 className="settings-section-title">{t('settings.updatealerts')}</h3>
+                        <label className="settings-checkbox-row">
+                            <input
+                                type="checkbox"
+                                checked={settings.updateAlertsEnabled ?? true}
+                                onChange={(e) => onSetUpdateAlertsEnabled(e.target.checked)}
+                            />
+                            <span>{t('settings.updatealerts.enable')}</span>
                         </label>
                     </section>
 

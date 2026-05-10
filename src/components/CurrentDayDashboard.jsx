@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import WeatherDetail from './WeatherDetail';
 import { ClockIcon } from './DetailIcons';
@@ -21,7 +21,6 @@ export default function CurrentDayDashboard({ getWeatherForDate, getNotesForDate
 
     // Live clock — tick every 15 seconds (accurate enough for minute display)
     useEffect(() => {
-        setTime(getTimeString(timeFormat)); // update immediately when format changes
         const interval = setInterval(() => setTime(getTimeString(timeFormat)), 15_000);
         return () => clearInterval(interval);
     }, [timeFormat]);
@@ -32,9 +31,9 @@ export default function CurrentDayDashboard({ getWeatherForDate, getNotesForDate
     const dayNum = format(today, 'd');
     const dayOfWeek = tr('day.' + ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][today.getDay()]);
 
-    const handleOpenToday = useCallback(() => {
+    const handleOpenToday = () => {
         if (onOpenDay) onOpenDay(today);
-    }, [onOpenDay]);
+    };
 
     return (
         <section className="dashboard pixel-border" aria-label={tr('dashboard.today', "Today's overview")}>

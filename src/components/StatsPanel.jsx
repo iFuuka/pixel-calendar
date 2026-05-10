@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useRef } from 'react';
-import { format, eachDayOfInterval, startOfYear, endOfYear, differenceInDays, parseISO } from 'date-fns';
+import { format, eachDayOfInterval, startOfYear, endOfYear } from 'date-fns';
 import './StatsPanel.css';
 
 export default function StatsPanel({ isOpen, onClose, allNotes, moods, t }) {
@@ -28,7 +28,6 @@ export default function StatsPanel({ isOpen, onClose, allNotes, moods, t }) {
         let currentStreak = 0;
         let longestStreak = 0;
         let streak = 0;
-        const todayStr = format(new Date(), 'yyyy-MM-dd');
         const dateSet = new Set(dateKeys);
 
         // Walk backwards from today

@@ -28,6 +28,15 @@ export default function ToastNotification({ notification, onClose }) {
     }
 
     const tags = (notification.tags ?? '').split(', ').filter(Boolean);
+    function handleAction() {
+        if (!notification.actionUrl) return;
+        if (window.electronUpdates) {
+            window.electronUpdates.openRelease(notification.actionUrl);
+        } else {
+            window.open(notification.actionUrl, '_blank', 'noopener,noreferrer');
+        }
+        handleClose();
+    }
 
     return (
         <div className={`toast-notification pixel-border${exiting ? ' toast--exiting' : ''}`}>
@@ -38,6 +47,11 @@ export default function ToastNotification({ notification, onClose }) {
             <div className="toast-body">
                 <div className="toast-date">&#128197; {notification.dateKey}</div>
                 <div className="toast-text">{notification.noteText}</div>
+                {notification.actionUrl && (
+                    <button className="toast-action" type="button" onClick={handleAction}>
+                        {notification.actionLabel || 'Open'}
+                    </button>
+                )}
                 {tags.length > 0 && (
                     <div className="toast-tags">
                         {tags.map((tag) => (

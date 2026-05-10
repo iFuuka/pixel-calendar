@@ -2,7 +2,7 @@
   "name": "pixel-calendar",
   "productName": "Pixel Calendar",
   "private": true,
-  "version": "2.0.0",
+  "version": "3.0.0",
   "author": "iFuuka",
   "description": "A beautiful pixel-art calendar with weather and notes",
   "main": "electron/main.js",

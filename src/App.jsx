@@ -1,6 +1,5 @@
-import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { addMonths, subMonths, addDays, format, parseISO, startOfMonth, differenceInDays } from 'date-fns';
-// html2canvas loaded dynamically on export
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import { addMonths, subMonths, addWeeks, subWeeks, format, parseISO, startOfMonth, differenceInDays } from 'date-fns';
 import Header from './components/Header';
 import CalendarGrid from './components/CalendarGrid';
 import DayModal from './components/DayModal';
@@ -8,7 +7,7 @@ import NotesSidebar from './components/NotesSidebar';
 import SettingsModal from './components/SettingsModal';
 import ConfirmModal from './components/ConfirmModal';
 import CurrentDayDashboard from './components/CurrentDayDashboard';
-// WeekAhead removed
+import WeekAhead from './components/WeekAhead';
 import HabitTracker from './components/HabitTracker';
 import StatsPanel from './components/StatsPanel';
 import SeasonalDecorations from './components/SeasonalDecorations';
@@ -17,6 +16,8 @@ import AdminPanel from './components/AdminPanel';
 import ToastNotification from './components/ToastNotification';
 import { useNotes } from './hooks/useNotes';
 import { useWeather } from './hooks/useWeather';
+import { useWeatherAlerts } from './hooks/useWeatherAlerts';
+import { useUpdateChecker } from './hooks/useUpdateChecker';
 import { useSettings } from './hooks/useSettings';
 import { useReminders } from './hooks/useReminders';
 import { useDayMeta } from './hooks/useDayMeta';
@@ -26,6 +27,7 @@ import { useCountdowns } from './hooks/useCountdowns';
 import { createTranslator } from './utils/i18n';
 import { getHolidayForDate } from './utils/holidays';
 import { playSound } from './utils/sounds';
+import packageJson from '../package.json';
 import './App.css';
 
 export default function App() {
@@ -39,15 +41,21 @@ export default function App() {
   const [noteToDelete, setNoteToDelete] = useState(null);
   const [adminOpen, setAdminOpen] = useState(false);
   const [toastData, setToastData] = useState(null);
-  const calendarRef = useRef(null);
+  const [calendarView, setCalendarView] = useState('month');
+  const [calendarSearch, setCalendarSearch] = useState('');
+  const [calendarLayers, setCalendarLayers] = useState({
+    weather: true,
+    holidays: true,
+    notes: true,
+    meta: true,
+  });
 
   // Settings
   const {
     settings, updateCity, updateLatLon, setTempUnit, setFirstDayOfWeek,
     setTheme, setLanguage, setTimeFormat, setAutoStart, setStartMinimized,
     setFontFamily, setCustomThemeEnabled, setCustomColor,
-    setSoundEnabled, setDecorationsEnabled, setHolidaysEnabled, setHolidayCountry,
-    THEME_KEYS,
+    setSoundEnabled, setWeatherAlertsEnabled, setUpdateAlertsEnabled, setDecorationsEnabled, setHolidaysEnabled, setHolidayCountry,
   } = useSettings();
 
   const t = useMemo(() => createTranslator(settings.language), [settings.language]);
@@ -74,11 +82,46 @@ export default function App() {
 
   // Weather
   const weatherLocation = { lat: settings.lat, lon: settings.lon, locationName: settings.locationName };
-  const { getWeatherForDate, loading: weatherLoading, locationName } = useWeather(currentMonth, weatherLocation);
+  const {
+    getWeatherForDate,
+    loading: weatherLoading,
+    locationName,
+    error: weatherError,
+    usingCache: weatherUsingCache,
+    lastUpdated: weatherLastUpdated,
+    refreshWeather,
+  } = useWeather(weatherLocation);
+
+  useWeatherAlerts({
+    enabled: settings.weatherAlertsEnabled,
+    getWeatherForDate,
+    onShowToast: handleShowToast,
+    t,
+  });
+
+  useUpdateChecker({
+    enabled: settings.updateAlertsEnabled,
+    currentVersion: packageJson.version,
+    onShowToast: handleShowToast,
+    t,
+  });
 
   // Navigation
-  const handlePrevMonth = useCallback(() => { setCurrentMonth(m => subMonths(m, 1)); sfx('navigate'); }, [sfx]);
-  const handleNextMonth = useCallback(() => { setCurrentMonth(m => addMonths(m, 1)); sfx('navigate'); }, [sfx]);
+  const handlePrevMonth = useCallback(() => {
+    setCurrentMonth(m => calendarView === 'week' ? subWeeks(m, 1) : subMonths(m, 1));
+    sfx('navigate');
+  }, [calendarView, sfx]);
+  const handleNextMonth = useCallback(() => {
+    setCurrentMonth(m => calendarView === 'week' ? addWeeks(m, 1) : addMonths(m, 1));
+    sfx('navigate');
+  }, [calendarView, sfx]);
+  const handleToday = useCallback(() => {
+    const today = new Date();
+    setCurrentMonth(calendarView === 'week' ? today : startOfMonth(today));
+    setSelectedDate(today);
+    setAutoEditNoteId(null);
+    sfx('click');
+  }, [calendarView, sfx]);
 
   const handleDayClick = useCallback((day) => {
     setSelectedDate(prev => {
@@ -121,32 +164,26 @@ export default function App() {
 
   const handleMoveNote = useCallback((from, to, noteId) => { moveNote(from, to, noteId); sfx('toggle'); }, [moveNote, sfx]);
 
-  // Export calendar as image
-  const handleExportImage = useCallback(async () => {
-    const el = calendarRef.current;
-    if (!el) return;
-    try {
-      const html2canvas = (await import('html2canvas')).default;
-      const canvas = await html2canvas(el, {
-        backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--clr-bg').trim() || '#fdf6f0',
-        scale: 2,
-        useCORS: true,
-        logging: false,
-      });
-      canvas.toBlob((blob) => {
-        if (!blob) return;
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.download = `pixel-calendar-${format(currentMonth, 'yyyy-MM')}.png`;
-        link.href = url;
-        link.click();
-        URL.revokeObjectURL(url);
-        sfx('noteAdd');
-      }, 'image/png');
-    } catch (err) {
-      console.error('Export failed:', err);
-    }
-  }, [currentMonth, sfx]);
+  const toggleCalendarLayer = useCallback((key) => {
+    setCalendarLayers((prev) => ({ ...prev, [key]: !prev[key] }));
+  }, []);
+
+  const getCalendarSearchMatch = useCallback((dateKey) => {
+    const query = calendarSearch.trim().toLowerCase();
+    if (!query) return false;
+
+    const notes = allNotes[dateKey] ?? [];
+    const noteMatch = notes.some((note) =>
+      note.text?.toLowerCase().includes(query)
+      || (note.tags ?? []).some((tag) => tag.toLowerCase().includes(query))
+    );
+    if (noteMatch) return true;
+
+    const holiday = getHoliday(dateKey);
+    if (holiday?.some((h) => h.en.toLowerCase().includes(query) || h.ru.toLowerCase().includes(query))) return true;
+
+    return (getMood(dateKey) ?? '').toLowerCase().includes(query);
+  }, [allNotes, calendarSearch, getHoliday, getMood]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -203,11 +240,14 @@ export default function App() {
         onPrev={handlePrevMonth}
         onNext={handleNextMonth}
         locationName={locationName}
+        weatherLoading={weatherLoading}
+        weatherError={weatherError}
+        weatherUsingCache={weatherUsingCache}
+        weatherLastUpdated={weatherLastUpdated}
+        onRefreshWeather={refreshWeather}
         onOpenSettings={() => { setSettingsOpen(true); sfx('modalOpen'); }}
         onOpenStats={() => { setStatsOpen(true); sfx('modalOpen'); }}
-        onExportImage={handleExportImage}
         focusMode={focusMode}
-        onToggleFocus={() => { setFocusMode(v => !v); sfx('toggle'); }}
         t={t}
       />
 
@@ -230,19 +270,70 @@ export default function App() {
         )}
 
         <div className="content-column">
-          <section className="calendar-section" ref={calendarRef}>
+          <section className="calendar-toolbar pixel-border">
+            <div className="calendar-toolbar-left">
+              <button className="calendar-tool-btn" type="button" onClick={handleToday}>
+                {t('calendar.today', 'Today')}
+              </button>
+              <div className="calendar-view-toggle" role="group" aria-label={t('calendar.view', 'Calendar view')}>
+                <button
+                  className={`calendar-tool-btn ${calendarView === 'month' ? 'calendar-tool-btn--active' : ''}`}
+                  type="button"
+                  onClick={() => setCalendarView('month')}
+                >
+                  {t('calendar.view.month', 'Month')}
+                </button>
+                <button
+                  className={`calendar-tool-btn ${calendarView === 'week' ? 'calendar-tool-btn--active' : ''}`}
+                  type="button"
+                  onClick={() => setCalendarView('week')}
+                >
+                  {t('calendar.view.week', 'Week')}
+                </button>
+              </div>
+            </div>
+            <input
+              className="calendar-search"
+              type="search"
+              value={calendarSearch}
+              onChange={(e) => setCalendarSearch(e.target.value)}
+              placeholder={t('calendar.search', 'Search calendar...')}
+              aria-label={t('calendar.search', 'Search calendar')}
+            />
+            <div className="calendar-layer-toggle" role="group" aria-label={t('calendar.layers', 'Calendar layers')}>
+              {['weather', 'holidays', 'notes', 'meta'].map((key) => (
+                <button
+                  key={key}
+                  className={`calendar-layer-btn ${calendarLayers[key] ? 'calendar-layer-btn--active' : ''}`}
+                  type="button"
+                  onClick={() => toggleCalendarLayer(key)}
+                  aria-pressed={calendarLayers[key]}
+                >
+                  {t(`calendar.layer.${key}`)}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="calendar-section">
             <CalendarGrid
               currentMonth={currentMonth}
+              viewMode={calendarView}
               selectedDate={selectedDate}
               onDayClick={handleDayClick}
               getWeatherForDate={getWeatherForDate}
               hasNotes={hasNotes}
               weatherLoading={weatherLoading}
               firstDayOfWeek={settings.firstDayOfWeek}
+              tempUnit={settings.tempUnit}
+              density="detailed"
               getHoliday={getHoliday}
               getDayMeta={getDayMeta}
               getMood={getMood}
               onMoveNote={handleMoveNote}
+              layers={calendarLayers}
+              searchActive={calendarSearch.trim().length > 0}
+              getSearchMatch={getCalendarSearchMatch}
               lang={settings.language}
               t={t}
             />
@@ -250,6 +341,17 @@ export default function App() {
 
           {!focusMode && (
             <>
+              <section className="week-ahead-section">
+                <WeekAhead
+                  getWeatherForDate={getWeatherForDate}
+                  getNotesForDate={getNotesForDate}
+                  getDayMeta={getDayMeta}
+                  onDayClick={handleDayClick}
+                  tempUnit={settings.tempUnit}
+                  t={t}
+                />
+              </section>
+
               {/* Countdowns — visible cards */}
               {activeCountdowns.length > 0 && (
                 <section className="countdowns-section">
@@ -349,10 +451,11 @@ export default function App() {
         onSetCustomThemeEnabled={setCustomThemeEnabled}
         onSetCustomColor={setCustomColor}
         onSetSoundEnabled={setSoundEnabled}
+        onSetWeatherAlertsEnabled={setWeatherAlertsEnabled}
+        onSetUpdateAlertsEnabled={setUpdateAlertsEnabled}
         onSetDecorationsEnabled={setDecorationsEnabled}
         onSetHolidaysEnabled={setHolidaysEnabled}
         onSetHolidayCountry={setHolidayCountry}
-        themeKeys={THEME_KEYS}
       />
 
       <StatsPanel

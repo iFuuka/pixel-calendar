@@ -22,6 +22,15 @@
     overflow: hidden;
 }
 
+.day-cell--compact {
+    min-height: 76px;
+    padding: 7px 4px 5px;
+}
+
+.day-cell--detailed {
+    min-height: 104px;
+}
+
 .day-cell::before {
     content: '';
     position: absolute;
@@ -83,6 +92,15 @@
     font-weight: 700;
 }
 
+.day-cell-top {
+    width: 100%;
+    min-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
 /* Day number */
 .day-number {
     font-size: 0.9rem;
@@ -92,19 +110,66 @@
     text-align: center;
 }
 
+.day-holiday-dot {
+    width: 7px;
+    height: 7px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--clr-mint2);
+    color: transparent;
+    box-shadow: 0 0 0 1px var(--clr-surface);
+}
+
 /* Weather mini strip */
 .day-weather {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: auto;
+    margin-bottom: 2px;
+    padding: 4px 6px;
+    min-width: 58px;
+    max-width: calc(100% - 8px);
+    border: 1.5px solid color-mix(in srgb, var(--clr-border) 70%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--clr-bg) 50%, transparent);
+    box-shadow: 2px 2px 0 color-mix(in srgb, var(--clr-border) 45%, transparent);
+}
+
+.day-cell--compact .day-weather {
+    flex-direction: column;
     gap: 1px;
-    margin-top: 4px;
+    min-width: 50px;
+    padding: 3px 5px;
+    box-shadow: none;
+}
+
+.day-cell--compact .day-temp-min {
+    display: none;
+}
+
+.day-cell--detailed .day-weather {
+    min-width: 72px;
 }
 
 .day-temp {
-    font-size: 0.7rem;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 1px;
+    font-size: 0.72rem;
+    color: var(--clr-text);
+    font-weight: 800;
+    line-height: 1;
+}
+
+.day-temp-min {
+    font-size: 0.58rem;
     color: var(--clr-text2);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 /* Loading placeholder */
@@ -164,6 +229,10 @@
     opacity: 0.75;
 }
 
+.day-cell--normal .day-holiday-label {
+    max-width: 86%;
+}
+
 /* ── Color label bar ───────────────────────────────────────── */
 .day-color-bar {
     position: absolute;
@@ -189,6 +258,12 @@
     line-height: 1;
 }
 
+.day-sticker--more {
+    font-size: 0.55rem;
+    font-weight: 800;
+    color: var(--clr-text2);
+}
+
 /* ── Mood emoji ───────────────────────────────────────────── */
 .day-mood {
     position: absolute;
@@ -204,6 +279,16 @@
     border: 2px dashed var(--clr-selected) !important;
     background: color-mix(in srgb, var(--clr-lavender) 30%, var(--clr-surface)) !important;
     transform: scale(1.03);
+}
+
+.day-cell--search-dim {
+    opacity: 0.28;
+}
+
+.day-cell--search-match {
+    border-color: var(--clr-selected) !important;
+    box-shadow: inset 0 0 0 2px var(--clr-lavender2), 0 0 0 2px color-mix(in srgb, var(--clr-selected) 30%, transparent);
+    z-index: 1;
 }
 
 /* Weekend columns — use theme panel colour (slightly tinted) */

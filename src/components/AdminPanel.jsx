@@ -55,16 +55,16 @@ export default function AdminPanel({ isOpen, onClose, allNotes, settings, allTag
     }, [allNotes]);
 
     // ── localStorage info ────────────────────────────
-    const storageInfo = useMemo(() => {
-        const keys = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            const val = localStorage.getItem(key);
-            keys.push({ key, size: new Blob([val]).size });
-        }
-        const totalSize = keys.reduce((sum, k) => sum + k.size, 0);
-        return { keys, totalSize };
-    }, [tab]); // recalculate when tab changes
+    const storageKeys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const val = localStorage.getItem(key);
+        storageKeys.push({ key, size: new Blob([val]).size });
+    }
+    const storageInfo = {
+        keys: storageKeys,
+        totalSize: storageKeys.reduce((sum, k) => sum + k.size, 0),
+    };
 
     // ── Test notification ────────────────────────────
     function sendTestNotification() {

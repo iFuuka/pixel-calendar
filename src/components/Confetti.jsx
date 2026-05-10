@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useState } from 'react';
 import './Confetti.css';
 
 const COLORS = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6bd6', '#ffa06b'];
 
 export default function Confetti() {
-    const particles = useMemo(() =>
+    const [particles] = useState(() =>
         Array.from({ length: 40 }, (_, i) => ({
             id: i,
             left: Math.random() * 100,
@@ -15,7 +15,7 @@ export default function Confetti() {
             rotation: Math.random() * 360,
             drift: -40 + Math.random() * 80,
         }))
-    , []);
+    );
 
     return (
         <div className="confetti-overlay" aria-hidden="true">

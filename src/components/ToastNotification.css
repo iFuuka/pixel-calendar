@@ -73,6 +73,19 @@
     white-space: pre-wrap;
 }
 
+.toast-action {
+    margin-top: 8px;
+    padding: 6px 10px;
+    border: 2px solid var(--clr-mint2);
+    border-radius: 6px;
+    background: var(--clr-mint);
+    color: var(--clr-text);
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
 .toast-tags {
     display: flex;
     flex-wrap: wrap;

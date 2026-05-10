@@ -1,24 +1,70 @@
 import { useState, useEffect, useCallback } from 'react';
 import { format, startOfDay } from 'date-fns';
 
+const WEATHER_CACHE_KEY = 'pixel-calendar-weather-cache';
+const WEATHER_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+
+function getCacheKey(lat, lon) {
+    const safeLat = Number(lat).toFixed(4);
+    const safeLon = Number(lon).toFixed(4);
+    return `${safeLat},${safeLon}`;
+}
+
+function loadCachedWeather(cacheKey) {
+    try {
+        const raw = localStorage.getItem(WEATHER_CACHE_KEY);
+        if (!raw) return null;
+        const cache = JSON.parse(raw);
+        const entry = cache?.[cacheKey];
+        if (!entry?.weatherMap || !entry.savedAt) return null;
+        if (Date.now() - entry.savedAt > WEATHER_CACHE_TTL_MS) return null;
+        return entry;
+    } catch {
+        return null;
+    }
+}
+
+function saveCachedWeather(cacheKey, weatherMap) {
+    try {
+        const raw = localStorage.getItem(WEATHER_CACHE_KEY);
+        const cache = raw ? JSON.parse(raw) : {};
+        cache[cacheKey] = { savedAt: Date.now(), weatherMap };
+        localStorage.setItem(WEATHER_CACHE_KEY, JSON.stringify(cache));
+    } catch {
+        // Ignore unavailable storage; live weather still works.
+    }
+}
+
 /**
  * useWeather — fetches Open-Meteo forecast (exact window: 3 past days, today, 15 future days).
  * Completely removes dummy/mock data; invalid dates remain empty.
  * weatherMap: { 'yyyy-MM-dd': { code, tempMax, tempMin, etc. } }
- * @param {Date} currentMonth 
  * @param {{ lat: number, lon: number, locationName: string }} location
  */
-export function useWeather(currentMonth, location) {
+export function useWeather(location) {
     const [weatherMap, setWeatherMap] = useState({});
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [lastUpdated, setLastUpdated] = useState(null);
+    const [usingCache, setUsingCache] = useState(false);
 
     // Always false now since we removed mock data logic, kept for App.jsx prop compatibility
     const usingMock = false;
 
     const { lat, lon, locationName } = location;
 
-    const fetchWeather = useCallback(async () => {
+    const fetchWeather = useCallback(async ({ silent = false } = {}) => {
+        const cacheKey = getCacheKey(lat, lon);
+        const cached = loadCachedWeather(cacheKey);
+
+        if (cached) {
+            setWeatherMap(cached.weatherMap);
+            setLastUpdated(cached.savedAt);
+            setUsingCache(true);
+        }
+
         setLoading(true);
+        if (!silent) setError(null);
 
         const url =
             `https://api.open-meteo.com/v1/forecast` +
@@ -77,8 +123,21 @@ export function useWeather(currentMonth, location) {
             }
             // Overwrites the entire map with the valid 19-day window
             setWeatherMap(liveMap);
-        } catch {
-            setWeatherMap({}); // on error, empty calendar (no dummy data)
+            setLastUpdated(Date.now());
+            setUsingCache(false);
+            setError(null);
+            saveCachedWeather(cacheKey, liveMap);
+        } catch (err) {
+            if (cached) {
+                setWeatherMap(cached.weatherMap);
+                setLastUpdated(cached.savedAt);
+                setUsingCache(true);
+            } else {
+                setWeatherMap({}); // on error, empty calendar (no dummy data)
+                setLastUpdated(null);
+                setUsingCache(false);
+            }
+            setError(err instanceof Error ? err.message : 'Weather unavailable');
         } finally {
             setLoading(false);
         }
@@ -87,7 +146,10 @@ export function useWeather(currentMonth, location) {
     useEffect(() => {
         // Clear old weather and fetch new when location (lat/lon) changes
         setWeatherMap({});
-        fetchWeather();
+        setError(null);
+        setUsingCache(false);
+        setLastUpdated(null);
+        fetchWeather({ silent: true });
     }, [lat, lon, fetchWeather]);
 
     const getWeatherForDate = useCallback(
@@ -95,5 +157,16 @@ export function useWeather(currentMonth, location) {
         [weatherMap]
     );
 
-    return { getWeatherForDate, loading, usingMock, locationName };
+    const refreshWeather = useCallback(() => fetchWeather(), [fetchWeather]);
+
+    return {
+        getWeatherForDate,
+        loading,
+        usingMock,
+        locationName,
+        error,
+        usingCache,
+        lastUpdated,
+        refreshWeather,
+    };
 }

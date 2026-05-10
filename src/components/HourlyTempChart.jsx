@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import './HourlyTempChart.css';
 
 function toF(c) { return Math.round(c * 9 / 5 + 32); }
@@ -92,7 +92,7 @@ function findRainPeriods(hourly, threshold = 30) {
     return periods;
 }
 
-export default function HourlyTempChart({ hourly = [], tempUnit = 'C', lang = 'en', t }) {
+export default function HourlyTempChart({ hourly = [], tempUnit = 'C', t }) {
     const tr = t || ((k, fb) => fb || k);
     const svgRef = useRef(null);
     const [hover, setHover] = useState(null);
@@ -147,7 +147,7 @@ export default function HourlyTempChart({ hourly = [], tempUnit = 'C', lang = 'e
     }));
 
     // Hover
-    const toSVG = useCallback((e) => {
+    const toSVG = (e) => {
         const svg = svgRef.current;
         if (!svg) return null;
         const rect = svg.getBoundingClientRect();
@@ -155,18 +155,18 @@ export default function HourlyTempChart({ hourly = [], tempUnit = 'C', lang = 'e
             x: (e.clientX - rect.left) * (W / rect.width),
             y: (e.clientY - rect.top) * (H / rect.height),
         };
-    }, [W, H]);
+    };
 
-    const handleMouseMove = useCallback((e) => {
+    const handleMouseMove = (e) => {
         const pt = toSVG(e);
         if (pt && pt.x >= padL && pt.x <= W - padR) {
             setHover(pt);
         } else {
             setHover(null);
         }
-    }, [toSVG, W, padL, padR]);
+    };
 
-    const handleMouseLeave = useCallback(() => setHover(null), []);
+    const handleMouseLeave = () => setHover(null);
 
     let hoverData = null;
     if (hover) {

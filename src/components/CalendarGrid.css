@@ -25,3 +25,7 @@
     grid-template-columns: repeat(7, 1fr);
     gap: 0;
 }
+
+.calendar-grid--week .day-cell {
+    min-height: 128px;
+}

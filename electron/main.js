@@ -1,10 +1,12 @@
 'use strict';
 
-const { app, BrowserWindow, Tray, Menu, nativeImage, shell, ipcMain, screen } = require('electron');
+const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain, screen, shell } = require('electron');
 const path = require('path');
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 const DEV_SERVER_URL = 'http://localhost:5173';
+const UPDATE_REPO = 'iFuuka/pixel-calendar';
+const GITHUB_API = `https://api.github.com/repos/${UPDATE_REPO}`;
 const isDev = !app.isPackaged;
 
 // ─── State ───────────────────────────────────────────────────────────────────
@@ -132,6 +134,107 @@ function getIconPath() {
     return path.join(process.resourcesPath, 'icon.png');
 }
 
+function cleanText(value, maxLength = 200) {
+    if (typeof value !== 'string') return '';
+    return Array.from(value)
+        .filter((char) => {
+            const code = char.charCodeAt(0);
+            return code >= 32 && code !== 127;
+        })
+        .join('')
+        .trim()
+        .slice(0, maxLength);
+}
+
+function sanitizeNotificationData(data) {
+    if (!data || typeof data !== 'object') {
+        return {
+            title: 'Pixel Calendar',
+            noteText: '',
+            dateKey: '',
+            intervalKey: '',
+            tags: '',
+        };
+    }
+
+    return {
+        title: cleanText(data.title, 80) || 'Pixel Calendar',
+        noteText: cleanText(data.noteText, 300),
+        dateKey: /^\d{4}-\d{2}-\d{2}$/.test(data.dateKey) ? data.dateKey : '',
+        intervalKey: cleanText(data.intervalKey, 40),
+        tags: cleanText(data.tags, 200),
+    };
+}
+
+function normalizeVersion(version) {
+    return String(version || '').trim().replace(/^v/i, '');
+}
+
+function compareVersions(a, b) {
+    const pa = normalizeVersion(a).split('.').map((part) => parseInt(part, 10) || 0);
+    const pb = normalizeVersion(b).split('.').map((part) => parseInt(part, 10) || 0);
+    const max = Math.max(pa.length, pb.length);
+    for (let i = 0; i < max; i++) {
+        const diff = (pa[i] || 0) - (pb[i] || 0);
+        if (diff !== 0) return diff;
+    }
+    return 0;
+}
+
+async function fetchJson(url) {
+    const res = await fetch(url, {
+        headers: {
+            'Accept': 'application/vnd.github+json',
+            'User-Agent': 'Pixel-Calendar',
+        },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+}
+
+async function checkForUpdates() {
+    const currentVersion = app.getVersion();
+    let latest = null;
+
+    try {
+        const release = await fetchJson(`${GITHUB_API}/releases/latest`);
+        latest = {
+            version: normalizeVersion(release.tag_name || release.name),
+            name: release.name || release.tag_name,
+            url: release.html_url,
+            publishedAt: release.published_at,
+            source: 'release',
+        };
+    } catch {
+        const tags = await fetchJson(`${GITHUB_API}/tags?per_page=1`);
+        const tag = Array.isArray(tags) ? tags[0] : null;
+        if (tag?.name) {
+            latest = {
+                version: normalizeVersion(tag.name),
+                name: tag.name,
+                url: `https://github.com/${UPDATE_REPO}/releases/tag/${tag.name}`,
+                publishedAt: null,
+                source: 'tag',
+            };
+        }
+    }
+
+    if (!latest?.version) {
+        return { ok: false, error: 'No release or tag found', currentVersion };
+    }
+
+    return {
+        ok: true,
+        currentVersion,
+        latestVersion: latest.version,
+        latestName: latest.name,
+        releaseUrl: latest.url,
+        publishedAt: latest.publishedAt,
+        source: latest.source,
+        updateAvailable: compareVersions(latest.version, currentVersion) > 0,
+    };
+}
+
 // ─── Detect silent/hidden launch ─────────────────────────────────────────────
 if (process.argv.includes('--hidden')) {
     startMinimized = true;
@@ -172,6 +275,8 @@ app.on('before-quit', () => {
 
 // ─── Custom Notification Window ──────────────────────────────────────────────
 function showNotificationWindow(data) {
+    const safeData = sanitizeNotificationData(data);
+
     // Close any existing notification
     if (notifWin && !notifWin.isDestroyed()) {
         notifWin.close();
@@ -196,8 +301,9 @@ function showNotificationWindow(data) {
         focusable: false,
         show: false,
         webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
+            nodeIntegration: false,
+            contextIsolation: true,
+            preload: path.join(__dirname, 'notification-preload.js'),
         },
     });
 
@@ -205,7 +311,7 @@ function showNotificationWindow(data) {
 
     notifWin.once('ready-to-show', () => {
         notifWin.showInactive();
-        notifWin.webContents.send('notification-data', data);
+        notifWin.webContents.send('notification-data', safeData);
     });
 
     notifWin.on('closed', () => {
@@ -259,4 +365,24 @@ ipcMain.handle('get-auto-start', () => {
         minimized: (loginSettings.openAtLogin && loginSettings.launchItems?.[0]?.args?.includes?.('--hidden'))
             || process.argv.includes('--hidden'),
     };
+});
+
+ipcMain.handle('check-for-updates', async () => {
+    try {
+        return await checkForUpdates();
+    } catch (err) {
+        return {
+            ok: false,
+            error: err instanceof Error ? err.message : 'Update check failed',
+            currentVersion: app.getVersion(),
+        };
+    }
+});
+
+ipcMain.handle('open-release-url', async (event, url) => {
+    if (typeof url !== 'string' || !url.startsWith(`https://github.com/${UPDATE_REPO}/`)) {
+        return { ok: false };
+    }
+    await shell.openExternal(url);
+    return { ok: true };
 });

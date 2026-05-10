@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState } from 'react';
 import './SeasonalDecorations.css';
 
 function getSeason(month) {
@@ -19,7 +19,7 @@ export default function SeasonalDecorations() {
     const season = getSeason(new Date().getMonth());
     const { chars, count } = PARTICLES[season];
 
-    const particles = useMemo(() => {
+    const [particles] = useState(() => {
         return Array.from({ length: count }, (_, i) => ({
             id: i,
             char: chars[i % chars.length],
@@ -29,7 +29,7 @@ export default function SeasonalDecorations() {
             size: 0.6 + Math.random() * 0.8,
             drift: -30 + Math.random() * 60,
         }));
-    }, [season]);
+    });
 
     return (
         <div className={`seasonal-overlay seasonal-overlay--${season}`} aria-hidden="true">

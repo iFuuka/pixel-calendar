@@ -135,9 +135,7 @@
   </div>
 
   <script>
-    const { ipcRenderer } = require('electron');
-
-    ipcRenderer.on('notification-data', (event, data) => {
+    window.notificationApi.onData((data) => {
       document.getElementById('title').textContent = data.title || 'Pixel Calendar';
       document.getElementById('date').textContent = '\uD83D\uDCC5 ' + (data.dateKey || '');
       document.getElementById('text').textContent = data.noteText || '';
@@ -155,7 +153,7 @@
     });
 
     document.getElementById('closeBtn').addEventListener('click', () => {
-      ipcRenderer.send('close-notification');
+      window.notificationApi.close();
     });
 
     // Notification stays until user clicks close

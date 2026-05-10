@@ -4,7 +4,11 @@ import { getWeatherInfo } from '../utils/weatherCodes';
 import { WeatherIcon } from './PixelIcons';
 import './WeekAhead.css';
 
-export default function WeekAhead({ getWeatherForDate, getNotesForDate, getDayMeta, onDayClick, t }) {
+function toF(c) {
+    return Math.round(c * 9 / 5 + 32);
+}
+
+export default function WeekAhead({ getWeatherForDate, getNotesForDate, getDayMeta, onDayClick, tempUnit = 'C', t }) {
     const tr = t || ((k, fb) => fb || k);
     const today = new Date();
     const days = Array.from({ length: 7 }, (_, i) => addDays(today, i));
@@ -38,7 +42,9 @@ export default function WeekAhead({ getWeatherForDate, getNotesForDate, getDayMe
                                 <div className="week-day-weather">
                                     <WeatherIcon type={weatherInfo.icon} size={18} />
                                     {weather.tempMax !== undefined && (
-                                        <span className="week-day-temp">{weather.tempMax}°</span>
+                                        <span className="week-day-temp">
+                                            {tempUnit === 'F' ? toF(weather.tempMax) : weather.tempMax}°
+                                        </span>
                                     )}
                                 </div>
                             )}

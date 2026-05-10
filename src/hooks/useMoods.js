@@ -27,7 +27,11 @@ export function useMoods() {
     const [moods, setMoods] = useState(load);
 
     useEffect(() => {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(moods)); } catch {}
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(moods));
+        } catch {
+            // Storage may be unavailable or full.
+        }
     }, [moods]);
 
     const getMood = useCallback((dateKey) => moods[dateKey] || null, [moods]);

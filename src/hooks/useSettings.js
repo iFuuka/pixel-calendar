@@ -18,6 +18,8 @@ const DEFAULT_SETTINGS = {
     holidayCountry: 'RU',    // Country code for holidays
     fontFamily: 'pixel',     // 'pixel' | 'classic'
     soundEnabled: false,     // 8-bit sound effects
+    weatherAlertsEnabled: true, // Smart weather alerts
+    updateAlertsEnabled: true,  // GitHub release/tag update alerts
     decorationsEnabled: true, // Seasonal decorations
     customThemeEnabled: false,
     customColors: { bg: '#fdf6f0', surface: '#fff8f4', accent: '#cbb8f0', text: '#4a3860' },
@@ -30,15 +32,6 @@ const THEME_KEYS = [
     'autumn-sunset',
     'terraria-forest',
 ];
-
-function loadSettings() {
-    try {
-        const raw = localStorage.getItem(SETTINGS_KEY);
-        return raw ? { ...DEFAULT_SETTINGS, ...JSON.parse(raw) } : { ...DEFAULT_SETTINGS };
-    } catch {
-        return { ...DEFAULT_SETTINGS };
-    }
-}
 
 function saveSettings(data) {
     try {
@@ -184,6 +177,8 @@ export function useSettings() {
         ...p, customColors: { ...p.customColors, [key]: value }, customThemeEnabled: true,
     })), []);
     const setSoundEnabled = useCallback((v) => setSettings((p) => ({ ...p, soundEnabled: v })), []);
+    const setWeatherAlertsEnabled = useCallback((v) => setSettings((p) => ({ ...p, weatherAlertsEnabled: v })), []);
+    const setUpdateAlertsEnabled = useCallback((v) => setSettings((p) => ({ ...p, updateAlertsEnabled: v })), []);
     const setDecorationsEnabled = useCallback((v) => setSettings((p) => ({ ...p, decorationsEnabled: v })), []);
     const setHolidaysEnabled = useCallback((enabled) => setSettings((p) => ({ ...p, holidaysEnabled: enabled })), []);
     const setHolidayCountry = useCallback((code) => setSettings((p) => ({ ...p, holidayCountry: code, holidaysEnabled: true })), []);
@@ -219,6 +214,8 @@ export function useSettings() {
         setCustomThemeEnabled,
         setCustomColor,
         setSoundEnabled,
+        setWeatherAlertsEnabled,
+        setUpdateAlertsEnabled,
         setDecorationsEnabled,
         setHolidaysEnabled,
         setHolidayCountry,

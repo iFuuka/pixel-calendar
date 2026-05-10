@@ -2,10 +2,33 @@ import React from 'react';
 import { GearIcon, StatsIcon } from './PixelIcons';
 import './Header.css';
 
-export default function Header({ currentMonth, onPrev, onNext, locationName, onOpenSettings, onOpenStats, onExportImage, focusMode, onToggleFocus, t }) {
+function getWeatherStatus({ weatherError, weatherUsingCache, weatherLastUpdated, t }) {
+    const tr = t || ((key, fallback) => fallback || key);
+    if (weatherError && weatherUsingCache) return tr('weather.status.cached', 'Cached forecast');
+    if (weatherError) return tr('weather.status.offline', 'Weather offline');
+    if (weatherLastUpdated) return tr('weather.status.live', 'Live forecast');
+    return tr('weather.status.pending', 'Weather pending');
+}
+
+export default function Header({
+    currentMonth,
+    onPrev,
+    onNext,
+    locationName,
+    weatherLoading = false,
+    weatherError = null,
+    weatherUsingCache = false,
+    weatherLastUpdated = null,
+    onRefreshWeather,
+    onOpenSettings,
+    onOpenStats,
+    focusMode,
+    t,
+}) {
     const monthKey = 'month.' + ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'][currentMonth.getMonth()];
     const month = t ? t(monthKey) : currentMonth.toLocaleString('default', { month: 'long' });
     const year = currentMonth.getFullYear();
+    const weatherStatus = getWeatherStatus({ weatherError, weatherUsingCache, weatherLastUpdated, t });
 
     return (
         <header className="header pixel-border">
@@ -13,7 +36,24 @@ export default function Header({ currentMonth, onPrev, onNext, locationName, onO
                 <span className="header-icon">🌸</span>
                 <div className="header-title-group">
                     <h1 className="header-title">{t ? t('app.title') : 'Pixel Calendar'}</h1>
-                    {!focusMode && <span className="header-location">📍 {locationName}</span>}
+                    {!focusMode && (
+                        <div className="header-location-row">
+                            <span className="header-location">📍 {locationName}</span>
+                            <button
+                                className={`weather-refresh ${weatherError ? 'weather-refresh--error' : ''}`}
+                                type="button"
+                                onClick={onRefreshWeather}
+                                disabled={weatherLoading}
+                                title={weatherStatus}
+                                aria-label={weatherStatus}
+                            >
+                                {weatherLoading ? '...' : '↻'}
+                            </button>
+                            <span className={`weather-status ${weatherError ? 'weather-status--error' : weatherUsingCache ? 'weather-status--cache' : ''}`}>
+                                {weatherStatus}
+                            </span>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -41,22 +81,8 @@ export default function Header({ currentMonth, onPrev, onNext, locationName, onO
             </div>
 
             <div className="header-right">
-                <button
-                    className="settings-btn btn pixel-border"
-                    onClick={onToggleFocus}
-                    title={t ? t(focusMode ? 'focus.exit' : 'focus.enter') : 'Focus'}
-                >
-                    {focusMode ? '⊞' : '◎'}
-                </button>
                 {!focusMode && (
                     <>
-                        <button
-                            className="settings-btn btn pixel-border"
-                            onClick={onExportImage}
-                            title={t ? t('export.image', 'Export as Image') : 'Export'}
-                        >
-                            📷
-                        </button>
                         <button
                             className="settings-btn btn pixel-border"
                             onClick={onOpenStats}

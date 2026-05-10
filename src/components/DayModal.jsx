@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { format, isToday, differenceInDays } from 'date-fns';
+import { format, isToday } from 'date-fns';
 import WeatherDetail from './WeatherDetail';
 import HourlyTempChart from './HourlyTempChart';
 import NotesPanel from './NotesPanel';
@@ -44,6 +44,7 @@ export default function DayModal({
 }) {
     const tr = t || ((k, fb) => fb || k);
     const panelRef = useRef(null);
+    const [cdLabel, setCdLabel] = useState('');
 
     useEffect(() => {
         function handleKey(e) { if (e.key === 'Escape') onClose(); }
@@ -69,7 +70,6 @@ export default function DayModal({
 
     // Countdowns for this day
     const dayCountdowns = (countdowns || []).filter(c => c.dateKey === dateKey);
-    const [cdLabel, setCdLabel] = useState('');
 
     return (
         <>
@@ -106,6 +106,7 @@ export default function DayModal({
                 <div className="modal-content">
                     {/* ── Day decorations block ── */}
                     <section className="modal-section meta-block">
+                        <div className="meta-block-title">{tr('daymeta.title', 'Day setup')}</div>
                         {/* Mood row */}
                         <div className="meta-line">
                             <span className="meta-line-label">{tr('mood.title', 'Mood')}</span>

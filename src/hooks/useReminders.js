@@ -51,8 +51,9 @@ export function useReminders(allNotes, markReminderNotified, onShowToast) {
                         const offsetMs = INTERVAL_MS[intervalKey] ?? 0;
                         const fireAt = target - offsetMs;
 
-                        // Fire if within a 2-minute window after fire time
-                        if (now >= fireAt && now < fireAt + 2 * 60 * 1000) {
+                        // Fire if the reminder is due and was not yet notified.
+                        // Allow up to 24 hours late (covers late app start, system reboot, etc.)
+                        if (now >= fireAt && now < fireAt + 24 * 60 * 60 * 1000) {
                             fireNotification(dateKey, note, intervalKey, onShowToast);
                             markReminderNotified(dateKey, note.id, intervalKey);
                         }

@@ -17,7 +17,11 @@ export function useCountdowns() {
     const [countdowns, setCountdowns] = useState(load);
 
     useEffect(() => {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(countdowns)); } catch {}
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(countdowns));
+        } catch {
+            // Storage may be unavailable or full.
+        }
     }, [countdowns]);
 
     const addCountdown = useCallback((dateKey, label, emoji = '🎯') => {

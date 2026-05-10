@@ -375,7 +375,7 @@ function getHolidaysJP(year) {
     ];
 }
 
-function getHolidaysCN(year) {
+function getHolidaysCN() {
     return [
         // ── Public holidays ──
         { date: '01-01', en: "New Year's Day", ru: 'Новый год' },
