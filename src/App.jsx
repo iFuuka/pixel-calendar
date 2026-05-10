@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { addMonths, subMonths, addWeeks, subWeeks, format, parseISO, startOfMonth, differenceInDays } from 'date-fns';
+import { addMonths, subMonths, addWeeks, subWeeks, format, parseISO, startOfMonth, differenceInDays, isSameMonth } from 'date-fns';
 import Header from './components/Header';
 import CalendarGrid from './components/CalendarGrid';
 import DayModal from './components/DayModal';
@@ -122,6 +122,21 @@ export default function App() {
     setAutoEditNoteId(null);
     sfx('click');
   }, [calendarView, sfx]);
+
+  const handleCalendarViewChange = useCallback((view) => {
+    if (view === calendarView) return;
+
+    if (view === 'week') {
+      const today = new Date();
+      const weekAnchor = selectedDate || (isSameMonth(today, currentMonth) ? today : currentMonth);
+      setCurrentMonth(weekAnchor);
+    } else {
+      setCurrentMonth((date) => startOfMonth(date));
+    }
+
+    setCalendarView(view);
+    sfx('toggle');
+  }, [calendarView, currentMonth, selectedDate, sfx]);
 
   const handleDayClick = useCallback((day) => {
     setSelectedDate(prev => {
@@ -279,14 +294,14 @@ export default function App() {
                 <button
                   className={`calendar-tool-btn ${calendarView === 'month' ? 'calendar-tool-btn--active' : ''}`}
                   type="button"
-                  onClick={() => setCalendarView('month')}
+                  onClick={() => handleCalendarViewChange('month')}
                 >
                   {t('calendar.view.month', 'Month')}
                 </button>
                 <button
                   className={`calendar-tool-btn ${calendarView === 'week' ? 'calendar-tool-btn--active' : ''}`}
                   type="button"
-                  onClick={() => setCalendarView('week')}
+                  onClick={() => handleCalendarViewChange('week')}
                 >
                   {t('calendar.view.week', 'Week')}
                 </button>
