@@ -98,6 +98,7 @@ export default function HourlyTempChart({ hourly = [], tempUnit = 'C', t }) {
     const [hover, setHover] = useState(null);
 
     if (!hourly || hourly.length === 0) return null;
+    if (hourly.some(h => !Number.isFinite(h.temp))) return <p className="event-hint">{tr('eventWeather.incomplete')}</p>;
 
     const temps = hourly.map((h) => tempUnit === 'F' ? toF(h.temp) : h.temp);
     const tempsC = hourly.map((h) => h.temp);
@@ -176,7 +177,7 @@ export default function HourlyTempChart({ hourly = [], tempUnit = 'C', t }) {
         // Find nearest hour's precipProb
         const nearestIdx = hourly.reduce((best, h, i) =>
             Math.abs(h.hour - hoverHour) < Math.abs(hourly[best].hour - hoverHour) ? i : best, 0);
-        const precipProb = hourly[nearestIdx]?.precipProb ?? 0;
+        const precipProb = hourly[nearestIdx]?.precipProb ?? null;
         hoverData = { ...interp, tempC: interpC, precipProb };
     }
 

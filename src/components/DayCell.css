@@ -28,8 +28,37 @@
 }
 
 .day-cell--detailed {
-    min-height: 104px;
+    min-height: 132px;
 }
+
+.day-event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+    min-width: 0;
+    padding: 3px 2px 12px;
+    text-align: left;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.7rem;
+    line-height: 1.4;
+}
+
+.day-event {
+    display: flex;
+    gap: 4px;
+    padding: 2px 4px;
+    border-left: 2px solid var(--clr-selected);
+    background: var(--clr-surface);
+    color: var(--clr-text);
+    min-width: 0;
+}
+
+.day-event-time { flex-shrink: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+.day-event-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.day-event-more { padding-left: 5px; color: var(--clr-text2); font-weight: 600; }
+
+.calendar-grid--week .day-cell { min-height: 210px; }
 
 .day-cell::before {
     content: '';
@@ -103,7 +132,7 @@
 
 /* Day number */
 .day-number {
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 700;
     line-height: 1;
     min-width: 22px;
@@ -216,7 +245,7 @@
 
 .day-holiday-label {
     font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-    font-size: 0.55rem;
+    font-size: 0.625rem;
     line-height: 1.2;
     color: var(--clr-text);
     font-weight: 500;
@@ -226,7 +255,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     padding: 1px 3px;
-    opacity: 0.75;
+    opacity: 0.9;
 }
 
 .day-cell--normal .day-holiday-label {
@@ -244,14 +273,17 @@
 }
 
 /* ── Stickers ─────────────────────────────────────────────── */
+.day-cell-marks,
 .day-stickers {
     display: flex;
-    gap: 1px;
-    position: absolute;
-    top: 3px;
-    right: 3px;
-    z-index: 1;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 3px;
+    max-width: 100%;
 }
+
+.day-cell-marks { padding: 2px 0; }
 
 .day-sticker {
     font-size: 0.65rem;
@@ -266,12 +298,9 @@
 
 /* ── Mood emoji ───────────────────────────────────────────── */
 .day-mood {
-    position: absolute;
-    bottom: 3px;
-    left: 4px;
+    display: inline-flex;
     font-size: 0.7rem;
     line-height: 1;
-    z-index: 1;
 }
 
 /* ── Drag & drop ──────────────────────────────────────────── */

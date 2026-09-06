@@ -356,3 +356,14 @@
     font-size: 0.85rem;
     animation: pulse 1.5s ease-in-out infinite;
 }
+.backup-panel { padding-bottom: 18px; border-bottom: 1px solid var(--clr-border); }
+.backup-panel h4, .legacy-notes-title { margin: 12px 0 8px; font-size: 0.85rem; }
+.backup-preview {
+    margin-top: 14px; padding: 14px; border: 2px solid var(--clr-border);
+    background: var(--clr-bg); color: var(--clr-text); border-radius: 5px;
+    font: 0.85rem/1.5 'Segoe UI', system-ui, sans-serif;
+}
+.backup-filename { overflow-wrap: anywhere; }
+.backup-counts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 18px; }
+.backup-counts > div { display: flex; justify-content: space-between; gap: 8px; }
+.backup-counts dd { margin: 0; font-weight: 700; }

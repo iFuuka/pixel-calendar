@@ -434,3 +434,27 @@
     width: 14px;
     height: 14px;
 }
+.event-schedule { margin: 10px 0; }
+.event-schedule-fields { display: flex; gap: 10px; flex-wrap: wrap; }
+.event-schedule-fields label { display: flex; flex-direction: column; gap: 5px; flex: 1 1 120px; min-width: 0; font-size: 0.75rem; }
+.event-schedule-fields input, .event-schedule-fields select {
+    width: 100%; min-width: 0; padding: 8px; border: 1px solid var(--clr-border);
+    background: var(--clr-surface); color: var(--clr-text); border-radius: 4px;
+    font: 0.85rem 'Segoe UI', system-ui, sans-serif;
+}
+.event-all-day { display: flex; gap: 6px; align-items: center; margin-top: 8px; font-size: 0.75rem; }
+.event-hint { margin: 6px 0; color: var(--clr-text2); font: 0.75rem/1.5 'Segoe UI', system-ui, sans-serif; }
+.event-summary { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 6px; color: var(--clr-text2); font: 600 0.75rem 'Segoe UI', system-ui, sans-serif; }
+.event-weather {
+    margin: 10px 0;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color, #a99f91);
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+.event-weather p { margin: 5px 0; }
+.event-weather--adverse, .event-weather--stale { border-left: 4px solid #b87532; }
+.event-weather-options { display: flex; flex-wrap: wrap; gap: 6px; }
+.event-weather-options button { white-space: normal; text-align: left; }

@@ -139,3 +139,6 @@
         bottom: 16px;
     }
 }
+.toast-reminder-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.toast-reminder-actions button { flex: 1; min-width: 100px; }
+.toast-error { font: 0.8rem/1.4 'Segoe UI', system-ui, sans-serif; color: var(--clr-text); margin-top: 8px; }

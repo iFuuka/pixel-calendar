@@ -45,6 +45,12 @@
 }
 
 .author-click-counter {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    width: max-content;
+    margin: 0 auto;
     font-size: 0.68rem;
     font-weight: 700;
     color: var(--clr-text2);

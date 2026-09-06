@@ -85,7 +85,7 @@ export default function CurrentDayDashboard({ getWeatherForDate, getNotesForDate
                             {todayNotes.map((note) => (
                                 <li key={note.id} className="dashboard-note-item">
                                     <span className="dashboard-note-bullet">✏️</span>
-                                    <span className="dashboard-note-text">{note.text}</span>
+                                    <span className="dashboard-note-text">{note.time && <strong>{note.time} · </strong>}{note.text}</span>
                                 </li>
                             ))}
                         </ul>

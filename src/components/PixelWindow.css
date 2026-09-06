@@ -1,0 +1,235 @@
+.pixel-window {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  contain: strict;
+  background: var(--clr-bg);
+  --window-frame: color-mix(in srgb, var(--clr-lavender) 38%, #bb9d9f);
+  --window-frame-light: color-mix(in srgb, var(--clr-peach) 55%, #eed4c6);
+  --window-frame-shadow: color-mix(in srgb, var(--clr-shadow) 38%, #927a90);
+  --window-frame-inner: color-mix(in srgb, var(--clr-shadow) 25%, #a98e9d);
+  --window-curtain: color-mix(in srgb, var(--clr-lavender) 55%, #d9b9d0);
+  --window-curtain-light: color-mix(in srgb, var(--clr-panel) 55%, #e1bfd2);
+  --window-curtain-shadow: color-mix(in srgb, var(--clr-lavender2) 55%, #b197ba);
+}
+
+.pixel-window__art,
+.pixel-window__frame-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.pixel-window__frame-art {
+  position: absolute;
+  inset: 0;
+}
+
+.pixel-window__wall { fill: var(--clr-bg); }
+.pixel-window__wall-detail { fill: var(--clr-border); opacity: 0.5; }
+.pixel-window__frame { fill: var(--window-frame); }
+.pixel-window__frame-light { fill: var(--window-frame-light); }
+.pixel-window__frame-shadow { fill: var(--window-frame-shadow); }
+.pixel-window__frame-inner { fill: var(--window-frame-inner); }
+.pixel-window__curtain { fill: var(--window-curtain); }
+.pixel-window__curtain-light { fill: var(--window-curtain-light); }
+.pixel-window__curtain-shadow { fill: var(--window-curtain-shadow); }
+.pixel-window__rod { fill: var(--window-frame-shadow); }
+.pixel-window__tie { fill: var(--window-frame-light); }
+
+.pixel-window__cloud {
+  animation: pixel-window-cloud 32s steps(12, end) infinite alternate;
+}
+
+.pixel-window__cloud--near {
+  animation-duration: 25s;
+  animation-direction: alternate-reverse;
+}
+
+.pixel-window__rain {
+  animation: pixel-window-rain 1.35s steps(5, end) infinite;
+}
+
+.pixel-window__snow {
+  animation: pixel-window-snow 8s steps(10, end) infinite;
+}
+
+.pixel-window__foliage {
+  animation: pixel-window-foliage 7s steps(2, end) infinite;
+}
+
+.pixel-window__chimney-smoke {
+  animation: pixel-window-smoke 8s steps(12, end) infinite;
+}
+
+.pixel-window__falling-leaf {
+  animation: pixel-window-leaf 14s steps(16, end) infinite;
+}
+
+.pixel-window__butterfly {
+  animation: pixel-window-butterfly 14s steps(14, end) infinite;
+}
+
+.pixel-window__firefly {
+  opacity: 0.7;
+  animation: pixel-window-firefly 12s steps(12, end) infinite;
+}
+
+.pixel-window__star {
+  animation: pixel-window-star 10s steps(4, end) infinite;
+}
+
+.pixel-window__cat-breath {
+  animation: pixel-window-cat-breathe 6s steps(1, end) infinite;
+}
+
+.pixel-window__cat-tail {
+  animation: pixel-window-cat-tail 12s steps(1, end) infinite;
+}
+
+.pixel-window__cup-steam {
+  animation: pixel-window-cup-steam 5.2s steps(4, end) infinite;
+}
+
+.pixel-window__storm-flash {
+  --strike-offset: 0s;
+  opacity: 0;
+  animation: pixel-window-storm 24s linear infinite;
+  animation-delay: var(--strike-offset);
+}
+
+.pixel-window__storm-flash--far {
+  --strike-offset: -12s;
+}
+
+.pixel-window__lightning-stage {
+  opacity: 0;
+  animation: pixel-window-lightning-draw 24s steps(1, end) infinite;
+  animation-delay: calc(var(--strike-offset) + var(--segment-delay));
+}
+
+/* Keep a paused or reduced-motion storm dark, even when paused mid-flash. */
+.pixel-window[data-animated="false"] .pixel-window__storm-flash {
+  visibility: hidden;
+}
+
+.pixel-window[data-animated="false"] .pixel-window__motion {
+  animation-play-state: paused;
+}
+
+@keyframes pixel-window-cloud {
+  from { transform: translateX(-3px); }
+  to { transform: translateX(7px); }
+}
+
+@keyframes pixel-window-rain {
+  from { transform: translate(2px, -12px); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  to { transform: translate(-4px, 18px); opacity: 0; }
+}
+
+@keyframes pixel-window-snow {
+  from { transform: translate(0, -8px); opacity: 0; }
+  20% { opacity: 0.85; }
+  65% { opacity: 0.85; }
+  to { transform: translate(7px, 18px); opacity: 0; }
+}
+
+@keyframes pixel-window-foliage {
+  0%, 100% { transform: translateX(0); }
+  35% { transform: translateX(2px); }
+  70% { transform: translateX(1px); }
+}
+
+@keyframes pixel-window-smoke {
+  from { transform: translate(0, 0); opacity: 0; }
+  15% { opacity: 0.65; }
+  65% { opacity: 0.3; }
+  to { transform: translate(12px, -32px); opacity: 0; }
+}
+
+@keyframes pixel-window-leaf {
+  from { transform: translate(0, -6px); opacity: 0; }
+  15% { opacity: 0.85; }
+  35% { transform: translate(6px, 16px); }
+  65% { transform: translate(1px, 35px); opacity: 0.85; }
+  to { transform: translate(10px, 61px); opacity: 0; }
+}
+
+@keyframes pixel-window-butterfly {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(10px, -6px); }
+  50% { transform: translate(17px, 1px); }
+  75% { transform: translate(5px, 5px); }
+}
+
+@keyframes pixel-window-firefly {
+  0%, 100% { transform: translate(0, 0); opacity: 0.25; }
+  30% { transform: translate(5px, -8px); opacity: 0.8; }
+  65% { transform: translate(10px, -3px); opacity: 0.45; }
+}
+
+@keyframes pixel-window-star {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.85; }
+}
+
+/* Small, whole-pixel poses keep the sleeping cat resting on its paws. */
+@keyframes pixel-window-cat-breathe {
+  0%, 65%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-1px); }
+}
+
+@keyframes pixel-window-cat-tail {
+  0%, 68%, 78%, 88%, 100% { transform: translate(0, 0); }
+  72%, 82% { transform: translate(1px, -1px); }
+}
+
+@keyframes pixel-window-cup-steam {
+  0% { transform: translate(0, 4px); opacity: 0; }
+  25% { transform: translate(0, 0); opacity: 0.7; }
+  50% { transform: translate(0, -4px); opacity: 0.55; }
+  75% { transform: translate(4px, -8px); opacity: 0.3; }
+  100% { transform: translate(4px, -12px); opacity: 0; }
+}
+
+/* The leader grows for 0.9s; only the completed channel brightens and fades. */
+@keyframes pixel-window-storm {
+  0%, 12.4%, 19%, 100% { opacity: 0; }
+  12.5% { opacity: 0.65; }
+  16.25% { opacity: 0.8; }
+  16.6%, 17% { opacity: 1; }
+  18% { opacity: 0.3; }
+}
+
+@keyframes pixel-window-lightning-draw {
+  0%, 12.499%, 20%, 100% { opacity: 0; }
+  12.5%, 19.999% { opacity: 1; }
+}
+
+/* A static picture remains complete, including precipitation. */
+@media (prefers-reduced-motion: reduce) {
+  .pixel-window__motion {
+    animation: none;
+  }
+
+  .pixel-window__storm-flash {
+    visibility: hidden;
+  }
+}
+
+/* Keep the frame visible on narrow windows without distorting the art. */
+@media (max-aspect-ratio: 1/1) {
+  .pixel-window__art {
+    width: auto;
+    min-width: 100%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

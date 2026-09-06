@@ -6,7 +6,7 @@
 
 .weekday-headers {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     background: linear-gradient(90deg, var(--clr-lavender), var(--clr-sky), var(--clr-mint));
     border-bottom: 3px solid var(--clr-border);
 }
@@ -22,10 +22,10 @@
 
 .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 0;
 }
 
 .calendar-grid--week .day-cell {
-    min-height: 128px;
+    min-height: 210px;
 }

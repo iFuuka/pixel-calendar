@@ -25,6 +25,7 @@
 }
 
 .admin-header {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -62,6 +63,7 @@
 
 /* ── Tabs ──────────────────────────────────────────────────── */
 .admin-tabs {
+    flex-shrink: 0;
     display: flex;
     gap: 0;
     border-bottom: 2px solid var(--clr-border);
@@ -309,6 +311,180 @@
     align-self: flex-start;
 }
 
+/* ── Scenery preview ─────────────────────────────────────── */
+.admin-scene-preview {
+    position: relative;
+    width: min(100%, 350px);
+    aspect-ratio: 5 / 3;
+    margin-inline: auto;
+    overflow: hidden;
+    border: 2px solid var(--clr-border);
+    box-shadow: 3px 3px 0 var(--clr-shadow);
+}
+
+.admin-scene-preview > .pixel-window {
+    position: absolute;
+    inset: 0;
+}
+
+.admin-scene-preview .pixel-window__art {
+    width: 100%;
+    min-width: 0;
+    left: auto;
+    transform: none;
+}
+
+.admin-scene-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--clr-text2);
+    font-size: 0.78rem;
+    min-height: 20px;
+}
+
+.admin-scene-indicator {
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+    background: var(--clr-mint2);
+    border: 1px solid var(--clr-text2);
+}
+
+.admin-scene-indicator--preview {
+    background: var(--clr-peach2);
+}
+
+.admin-scene-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.admin-scene-controls label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+    color: var(--clr-text2);
+    font-size: 0.78rem;
+}
+
+.admin-scene-controls select {
+    width: 100%;
+    min-width: 0;
+    min-height: 34px;
+    padding: 5px 7px;
+    font: inherit;
+    color: var(--clr-text);
+    background: var(--clr-bg);
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+
+.admin-scene-presets {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+}
+
+.admin-scene-preset {
+    min-height: 34px;
+    padding: 5px 7px;
+    font-family: inherit;
+    font-size: 0.77rem;
+    line-height: 1.25;
+    color: var(--clr-text);
+    background: var(--clr-panel);
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius);
+    box-shadow: 2px 2px 0 var(--clr-shadow);
+    cursor: pointer;
+}
+
+.admin-scene-preset:hover {
+    background: var(--clr-lavender);
+}
+
+.admin-scene-preset.active {
+    background: var(--clr-lavender);
+    border-color: var(--clr-selected);
+    box-shadow: inset 1px 1px 0 var(--clr-surface);
+}
+
+.admin-scene-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 3px;
+}
+
+.admin-scene-actions .btn {
+    min-height: 34px;
+    flex: 1 1 auto;
+    justify-content: center;
+    font-size: 0.78rem;
+}
+
+.admin-scene-showcase-btn {
+    background: var(--clr-mint);
+    border-color: var(--clr-mint2);
+    color: var(--clr-text);
+    box-shadow: 3px 3px 0 var(--clr-mint2);
+}
+
+.admin-scene-actions .btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+    transform: none;
+    filter: none;
+}
+
+.admin-scene-controls select:focus-visible,
+.admin-scene-preset:focus-visible {
+    outline: 2px solid var(--clr-selected);
+    outline-offset: 3px;
+}
+
+.admin-backdrop--showcase {
+    background: transparent;
+    pointer-events: none;
+    animation: none;
+}
+
+.admin-panel--showcase {
+    top: auto;
+    left: auto;
+    right: 24px;
+    bottom: 24px;
+    transform: none;
+    width: 400px;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 48px);
+    animation: none;
+}
+
+.admin-panel--showcase .admin-tabs {
+    display: none;
+}
+
+.admin-panel--showcase .admin-header {
+    padding: 10px 14px;
+}
+
+.admin-panel--showcase .admin-content {
+    padding: 12px 14px 16px;
+}
+
+.admin-panel--showcase .admin-scene-presets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-panel--showcase .admin-scene-showcase-btn {
+    flex-basis: 100%;
+}
+
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 600px) {
     .admin-panel {
@@ -321,5 +497,14 @@
 
     .admin-kv-key {
         min-width: 80px;
+    }
+
+    .admin-scene-presets {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-panel--showcase {
+        right: 16px;
+        bottom: 16px;
     }
 }

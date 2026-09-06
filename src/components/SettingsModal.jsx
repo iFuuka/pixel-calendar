@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect, Suspense, lazy } from 'react';
 import { GearIcon } from './PixelIcons';
 import { HOLIDAY_COUNTRIES } from '../utils/holidays';
+import BackupPanel from './BackupPanel';
+import { MAX_BACKUP_BYTES, validateNotes } from '../utils/backup';
 import './SettingsModal.css';
 
 const MapPicker = lazy(() => import('./MapPicker'));
@@ -39,6 +41,7 @@ export default function SettingsModal({
     onSetWeatherAlertsEnabled,
     onSetUpdateAlertsEnabled,
     onSetDecorationsEnabled,
+    onSetWindowBackgroundEnabled,
     onSetHolidaysEnabled,
     onSetHolidayCountry,
 }) {
@@ -102,11 +105,17 @@ export default function SettingsModal({
         const file = e.target.files?.[0];
         if (!file) return;
         setImportStatus(null);
+        if (file.size > MAX_BACKUP_BYTES) {
+            setImportStatus({ ok: false, error: t('backup.sizeError') });
+            e.target.value = '';
+            return;
+        }
 
         const reader = new FileReader();
         reader.onload = (ev) => {
             try {
                 const data = JSON.parse(ev.target.result);
+                validateNotes(data);
                 // Validate: must be an object with date keys containing arrays of notes
                 if (typeof data !== 'object' || data === null || Array.isArray(data)) {
                     setImportStatus({ ok: false, error: t('settings.import.error.format', 'Invalid file format') });
@@ -379,6 +388,15 @@ export default function SettingsModal({
                         <h3 className="settings-section-title">{t('settings.decorations')}</h3>
                         <label className="settings-checkbox-row">
                             <input
+                                id="setting-window-background"
+                                type="checkbox"
+                                checked={settings.windowBackgroundEnabled ?? true}
+                                onChange={(e) => onSetWindowBackgroundEnabled(e.target.checked)}
+                            />
+                            <span>{t('settings.windowBackground')}</span>
+                        </label>
+                        <label className="settings-checkbox-row">
+                            <input
                                 type="checkbox"
                                 checked={settings.decorationsEnabled ?? true}
                                 onChange={(e) => onSetDecorationsEnabled(e.target.checked)}
@@ -442,6 +460,8 @@ export default function SettingsModal({
                     {/* ── 💾 Data Management ── */}
                     <section className="settings-section">
                         <h3 className="settings-section-title">{t('settings.data')}</h3>
+                        <BackupPanel t={t} />
+                        <h4 className="legacy-notes-title">{t('backup.notesOnly')}</h4>
                         <div className="settings-data-btns">
                             <button id="btn-export-notes" className="btn btn-primary" onClick={handleExportNotes}>{t('settings.export')}</button>
                             <button id="btn-import-notes" className="btn btn-primary" onClick={handleImportNotes}>{t('settings.import', '⬆ Import Notes')}</button>

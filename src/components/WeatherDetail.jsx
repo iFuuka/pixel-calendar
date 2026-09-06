@@ -67,8 +67,8 @@ export default function WeatherDetail({ weather, tempUnit = 'C', compact = false
     }
 
     const info = getWeatherInfo(weather.code);
-    const max = tempUnit === 'F' ? toF(weather.tempMax) : weather.tempMax;
-    const min = tempUnit === 'F' ? toF(weather.tempMin) : weather.tempMin;
+    const max = weather.tempMax == null ? '—' : tempUnit === 'F' ? toF(weather.tempMax) : weather.tempMax;
+    const min = weather.tempMin == null ? '—' : tempUnit === 'F' ? toF(weather.tempMin) : weather.tempMin;
     const unit = tempUnit === 'F' ? '°F' : '°C';
 
     // Dashboard (compact) uses real-time current wind; DayModal uses daily max wind gusts

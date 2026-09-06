@@ -36,6 +36,7 @@
 
 /* 2 ── Lavender Night ─────────────── dark mode: deep purples + soft pinks */
 [data-theme="lavender-night"] {
+  color-scheme: dark;
   --clr-bg: #1a1228;
   --clr-surface: #221a38;
   --clr-panel: #2c2040;
@@ -353,6 +354,17 @@ body {
 }
 
 /* ── App Layout ────────────────────────────────── */
+#root { isolation: isolate; }
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px dashed var(--clr-selected);
+  outline-offset: 3px;
+}
+
 .app {
   display: flex;
   flex-direction: column;

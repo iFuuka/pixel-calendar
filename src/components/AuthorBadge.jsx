@@ -1,24 +1,26 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './AuthorBadge.css';
 
 export default function AuthorBadge({ onAdminActivate }) {
     const [clickCount, setClickCount] = useState(0);
     const timerRef = useRef(null);
+    const clickCountRef = useRef(0);
+    useEffect(() => () => clearTimeout(timerRef.current), []);
 
     const handleNameClick = useCallback((e) => {
         e.stopPropagation();
-        setClickCount((prev) => {
-            const next = prev + 1;
-            clearTimeout(timerRef.current);
-            timerRef.current = setTimeout(() => setClickCount(0), 3000);
-
-            if (next >= 10) {
-                clearTimeout(timerRef.current);
+        const next = clickCountRef.current + 1;
+        clearTimeout(timerRef.current);
+        clickCountRef.current = next >= 10 ? 0 : next;
+        setClickCount(clickCountRef.current);
+        if (next >= 10) {
+            onAdminActivate?.();
+        } else {
+            timerRef.current = setTimeout(() => {
+                clickCountRef.current = 0;
                 setClickCount(0);
-                if (onAdminActivate) onAdminActivate();
-            }
-            return next >= 10 ? 0 : next;
-        });
+            }, 3000);
+        }
     }, [onAdminActivate]);
 
     const handleAvatarClick = useCallback((e) => {

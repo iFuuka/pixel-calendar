@@ -11,6 +11,7 @@ import WeekAhead from './components/WeekAhead';
 import HabitTracker from './components/HabitTracker';
 import StatsPanel from './components/StatsPanel';
 import SeasonalDecorations from './components/SeasonalDecorations';
+import PixelWindow from './components/PixelWindow';
 import AuthorBadge from './components/AuthorBadge';
 import AdminPanel from './components/AdminPanel';
 import ToastNotification from './components/ToastNotification';
@@ -24,9 +25,11 @@ import { useDayMeta } from './hooks/useDayMeta';
 import { useMoods } from './hooks/useMoods';
 import { useHabits } from './hooks/useHabits';
 import { useCountdowns } from './hooks/useCountdowns';
+import { useScenePreview } from './hooks/useScenePreview';
 import { createTranslator } from './utils/i18n';
 import { getHolidayForDate } from './utils/holidays';
 import { playSound } from './utils/sounds';
+import { getWindowScene } from './utils/windowScene';
 import packageJson from '../package.json';
 import './App.css';
 
@@ -40,7 +43,24 @@ export default function App() {
   const [autoEditNoteId, setAutoEditNoteId] = useState(null);
   const [noteToDelete, setNoteToDelete] = useState(null);
   const [adminOpen, setAdminOpen] = useState(false);
-  const [toastData, setToastData] = useState(null);
+  const { scenePreview, scenePlaying, sceneShowcase, setScenePreview, setScenePlaying,
+    setSceneShowcase, resetScenePreview } = useScenePreview(adminOpen);
+  const openAdmin = useCallback(() => { resetScenePreview(); setAdminOpen(true); }, [resetScenePreview]);
+  const closeAdmin = useCallback(() => { resetScenePreview(); setAdminOpen(false); }, [resetScenePreview]);
+  useEffect(() => {
+    if (!adminOpen) return;
+    const closeOnEscape = event => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        closeAdmin();
+      }
+    };
+    document.addEventListener('keydown', closeOnEscape, true);
+    return () => document.removeEventListener('keydown', closeOnEscape, true);
+  }, [adminOpen, closeAdmin]);
+  const [toastQueue, setToastQueue] = useState([]);
+  const toastData = toastQueue[0] || null;
   const [calendarView, setCalendarView] = useState('month');
   const [calendarSearch, setCalendarSearch] = useState('');
   const [calendarLayers, setCalendarLayers] = useState({
@@ -55,7 +75,7 @@ export default function App() {
     settings, updateCity, updateLatLon, setTempUnit, setFirstDayOfWeek,
     setTheme, setLanguage, setTimeFormat, setAutoStart, setStartMinimized,
     setFontFamily, setCustomThemeEnabled, setCustomColor,
-    setSoundEnabled, setWeatherAlertsEnabled, setUpdateAlertsEnabled, setDecorationsEnabled, setHolidaysEnabled, setHolidayCountry,
+    setSoundEnabled, setWeatherAlertsEnabled, setUpdateAlertsEnabled, setDecorationsEnabled, setWindowBackgroundEnabled, setHolidaysEnabled, setHolidayCountry,
   } = useSettings();
 
   const t = useMemo(() => createTranslator(settings.language), [settings.language]);
@@ -68,7 +88,7 @@ export default function App() {
   const {
     allNotes, getNotesForDate, addNote, editNote, deleteNote, moveNote,
     hasNotes, clearAllNotes, importNotes, updateNoteTags, updateNoteReminder,
-    markReminderNotified, allTags,
+    markReminderNotified, updateNoteSchedule, snoozeReminder, allTags,
   } = useNotes();
 
   // Day meta, moods, habits, countdowns
@@ -77,8 +97,9 @@ export default function App() {
   const { habits, addHabit, removeHabit, toggleCheck, isChecked, getStreak } = useHabits();
   const { countdowns, addCountdown, removeCountdown } = useCountdowns();
 
-  const handleShowToast = useCallback((data) => { setToastData(data); }, []);
-  useReminders(allNotes, markReminderNotified, handleShowToast);
+  const handleShowToast = useCallback((data) => { setToastQueue(queue => [...queue, data]); }, []);
+  const handleCloseToast = useCallback(() => { setToastQueue(queue => queue.slice(1)); }, []);
+  useReminders(allNotes, markReminderNotified, handleShowToast, t);
 
   // Weather
   const weatherLocation = { lat: settings.lat, lon: settings.lon, locationName: settings.locationName };
@@ -89,6 +110,8 @@ export default function App() {
     error: weatherError,
     usingCache: weatherUsingCache,
     lastUpdated: weatherLastUpdated,
+    timezone: weatherTimezone,
+    now: weatherNow,
     refreshWeather,
   } = useWeather(weatherLocation);
 
@@ -149,8 +172,8 @@ export default function App() {
 
   const handleCloseModal = useCallback(() => { setSelectedDate(null); setAutoEditNoteId(null); }, []);
 
-  const handleAddNote = useCallback((dateKey, text, tags, reminder) => {
-    addNote(dateKey, text, tags, reminder);
+  const handleAddNote = useCallback((dateKey, text, tags, reminder, schedule) => {
+    addNote(dateKey, text, tags, reminder, schedule);
     sfx('noteAdd');
   }, [addNote, sfx]);
 
@@ -167,7 +190,34 @@ export default function App() {
     setSidebarOpen(false);
   }, []);
 
-  const handleSidebarDeleteNote = useCallback((dateKey, noteId) => { setNoteToDelete({ dateKey, id: noteId }); }, []);
+  const handleSidebarDeleteNote = useCallback((dateKey, noteId) => {
+    const note = (allNotes[dateKey] || []).find(item => item.id === noteId)
+      || getNotesForDate(dateKey).find(item => item.id === noteId);
+    setNoteToDelete({ dateKey, id: noteId, recurring: !!note?.repeat && note.repeat !== 'none' });
+  }, [allNotes, getNotesForDate]);
+
+  const handleReminderAction = useCallback((action, notification) => {
+    const { dateKey, noteId } = notification;
+    if (!getNotesForDate(dateKey).some(note => note.id === noteId)) throw new Error(t('reminder.unavailable'));
+    if (action === 'snooze') {
+      try { snoozeReminder(dateKey, noteId); } catch { throw new Error(t('reminder.actionError')); }
+    } else if (action === 'open') {
+      setSettingsOpen(false); setStatsOpen(false); setAdminOpen(false); setSidebarOpen(false);
+      const date = parseISO(dateKey);
+      setCurrentMonth(calendarView === 'week' ? date : startOfMonth(date));
+      setSelectedDate(date);
+      setAutoEditNoteId(null);
+    } else throw new Error(t('reminder.actionError'));
+  }, [getNotesForDate, snoozeReminder, calendarView, t]);
+
+  useEffect(() => window.electronNotify?.onAction?.(request => {
+    try {
+      handleReminderAction(request.action, request.notification);
+      window.electronNotify.completeAction(request.id, { ok: true });
+    } catch (error) {
+      window.electronNotify.completeAction(request.id, { ok: false, error: error.message });
+    }
+  }), [handleReminderAction]);
   const confirmDeleteNote = useCallback(() => { if (noteToDelete) { handleDeleteNote(noteToDelete.dateKey, noteToDelete.id); setNoteToDelete(null); } }, [noteToDelete, handleDeleteNote]);
   const cancelDeleteNote = useCallback(() => { setNoteToDelete(null); }, []);
   const handleClearAllData = useCallback(() => { clearAllNotes(); setSelectedDate(null); }, [clearAllNotes]);
@@ -187,7 +237,7 @@ export default function App() {
     const query = calendarSearch.trim().toLowerCase();
     if (!query) return false;
 
-    const notes = allNotes[dateKey] ?? [];
+    const notes = getNotesForDate(dateKey);
     const noteMatch = notes.some((note) =>
       note.text?.toLowerCase().includes(query)
       || (note.tags ?? []).some((tag) => tag.toLowerCase().includes(query))
@@ -198,14 +248,14 @@ export default function App() {
     if (holiday?.some((h) => h.en.toLowerCase().includes(query) || h.ru.toLowerCase().includes(query))) return true;
 
     return (getMood(dateKey) ?? '').toLowerCase().includes(query);
-  }, [allNotes, calendarSearch, getHoliday, getMood]);
+  }, [getNotesForDate, calendarSearch, getHoliday, getMood]);
 
   // Keyboard shortcuts
   useEffect(() => {
     function handleKey(e) {
-      if (settingsOpen || statsOpen || adminOpen) return;
+      if (settingsOpen || statsOpen || adminOpen || selectedDate || noteToDelete) return;
       const tag = e.target.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target.isContentEditable) return;
 
       if (e.key === 'ArrowLeft') { e.preventDefault(); handlePrevMonth(); }
       if (e.key === 'ArrowRight') { e.preventDefault(); handleNextMonth(); }
@@ -227,7 +277,7 @@ export default function App() {
     }
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
-  }, [settingsOpen, statsOpen, adminOpen, focusMode, handlePrevMonth, handleNextMonth]);
+  }, [settingsOpen, statsOpen, adminOpen, selectedDate, noteToDelete, focusMode, handlePrevMonth, handleNextMonth]);
 
   // Active countdowns for dashboard
   const activeCountdowns = useMemo(() => {
@@ -242,13 +292,31 @@ export default function App() {
   const selectedDateKey = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null;
   const selectedWeather = selectedDateKey ? getWeatherForDate(selectedDateKey) : null;
   const selectedNotes = selectedDateKey ? getNotesForDate(selectedDateKey) : [];
+  // The sidebar can still edit a series whose first occurrence was moved away.
+  if (autoEditNoteId && !selectedNotes.some(note => note.id === autoEditNoteId)) {
+    const source = (allNotes[selectedDateKey] || []).find(note => note.id === autoEditNoteId);
+    if (source) selectedNotes.push({ ...source, sourceDateKey: selectedDateKey });
+  }
   const selectedHoliday = selectedDateKey ? getHoliday(selectedDateKey) : null;
   const selectedDayMeta = selectedDateKey ? getDayMeta(selectedDateKey) : null;
   const selectedMood = selectedDateKey ? getMood(selectedDateKey) : null;
+  const windowDate = new Date(weatherNow);
+  const windowScene = getWindowScene({
+    date: windowDate,
+    weather: getWeatherForDate(format(windowDate, 'yyyy-MM-dd')),
+    lat: settings.lat,
+    lastUpdated: weatherLastUpdated,
+    now: weatherNow,
+  });
+  const showingSceneDemo = adminOpen && (scenePreview !== null || sceneShowcase);
+  const showWindow = showingSceneDemo || (settings.windowBackgroundEnabled && !focusMode);
+  const displayedScene = adminOpen && scenePreview ? scenePreview : windowScene;
 
   return (
-    <div className={`app ${focusMode ? 'app--focus' : ''}`}>
-      {settings.decorationsEnabled && <SeasonalDecorations />}
+    <>
+    {showWindow && <PixelWindow scene={displayedScene} animated={settings.decorationsEnabled} />}
+    <div className={`app ${focusMode ? 'app--focus' : ''} ${showWindow ? 'app--window' : ''} ${adminOpen && sceneShowcase ? 'app--scene-showcase' : ''}`}>
+      {settings.decorationsEnabled && !showWindow && !focusMode && <SeasonalDecorations />}
 
       <Header
         currentMonth={currentMonth}
@@ -338,6 +406,7 @@ export default function App() {
               onDayClick={handleDayClick}
               getWeatherForDate={getWeatherForDate}
               hasNotes={hasNotes}
+              getNotesForDate={getNotesForDate}
               weatherLoading={weatherLoading}
               firstDayOfWeek={settings.firstDayOfWeek}
               tempUnit={settings.tempUnit}
@@ -420,8 +489,11 @@ export default function App() {
 
       {selectedDate && (
         <DayModal
+          key={selectedDateKey}
           selectedDate={selectedDate}
           weather={selectedWeather}
+          weatherStatus={{ lastUpdated: weatherLastUpdated, usingCache: weatherUsingCache, error: weatherError, timezone: weatherTimezone, locationName, now: weatherNow }}
+          onAcceptWeather={moveNote}
           notes={selectedNotes}
           holiday={selectedHoliday}
           dayMeta={selectedDayMeta}
@@ -433,9 +505,10 @@ export default function App() {
           onClose={handleCloseModal}
           onAddNote={handleAddNote}
           onEditNote={editNote}
-          onDeleteNote={handleDeleteNote}
+          onDeleteNote={handleSidebarDeleteNote}
           onUpdateNoteTags={updateNoteTags}
           onUpdateNoteReminder={updateNoteReminder}
+          onUpdateNoteSchedule={updateNoteSchedule}
           onSetDayColor={(color) => setDayColor(selectedDateKey, color)}
           onToggleSticker={(sticker) => toggleSticker(selectedDateKey, sticker)}
           tempUnit={settings.tempUnit}
@@ -469,6 +542,7 @@ export default function App() {
         onSetWeatherAlertsEnabled={setWeatherAlertsEnabled}
         onSetUpdateAlertsEnabled={setUpdateAlertsEnabled}
         onSetDecorationsEnabled={setDecorationsEnabled}
+        onSetWindowBackgroundEnabled={setWindowBackgroundEnabled}
         onSetHolidaysEnabled={setHolidaysEnabled}
         onSetHolidayCountry={setHolidayCountry}
       />
@@ -484,15 +558,20 @@ export default function App() {
       <ConfirmModal
         isOpen={noteToDelete !== null}
         title={t('modal.confirm.title', 'Confirm Deletion')}
-        message={t('modal.confirm.desc', 'Are you sure?')}
+        message={noteToDelete?.recurring
+          ? t('event.deleteSeries') : t('modal.confirm.desc', 'Are you sure?')}
         onConfirm={confirmDeleteNote}
         onCancel={cancelDeleteNote}
         t={t}
       />
 
-      <ToastNotification notification={toastData} onClose={() => setToastData(null)} />
-      <AuthorBadge onAdminActivate={() => setAdminOpen(true)} />
-      <AdminPanel isOpen={adminOpen} onClose={() => setAdminOpen(false)} allNotes={allNotes} settings={settings} allTags={allTags} onShowToast={handleShowToast} />
+      <ToastNotification notification={toastData} onClose={handleCloseToast} onReminderAction={handleReminderAction} />
+      <AuthorBadge onAdminActivate={openAdmin} />
+      <AdminPanel isOpen={adminOpen} onClose={closeAdmin} allNotes={allNotes} settings={settings} allTags={allTags} onShowToast={handleShowToast}
+        scenePreview={scenePreview} liveScene={windowScene} onScenePreviewChange={setScenePreview}
+        scenePlaying={scenePlaying} onScenePlayingChange={setScenePlaying}
+        sceneShowcase={sceneShowcase} onSceneShowcaseChange={setSceneShowcase} />
     </div>
+    </>
   );
 }

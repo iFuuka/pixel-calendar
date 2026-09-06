@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { REMINDER_INTERVALS } from '../hooks/useNotes';
 import MarkdownText from './MarkdownText';
+import EventSchedule from './EventSchedule';
+import EventWeather from './EventWeather';
 import './NotesPanel.css';
 
 /* ── Tag Input (shared) ──────────────────────────────────────────── */
@@ -116,7 +118,7 @@ function ReminderPicker({ reminder, onChange, t }) {
         onChange({
             ...reminder,
             enabled: !enabled,
-            intervals: !enabled ? intervals : [],
+            intervals: !enabled ? (intervals.length ? intervals : ['same-day']) : [],
             notified: reminder?.notified ?? [],
         });
     }
@@ -162,11 +164,10 @@ function ReminderPicker({ reminder, onChange, t }) {
 }
 
 /* ── Note Item ───────────────────────────────────────────────────── */
-function NoteItem({ note, dateKey, onEdit, onDelete, autoEdit, onUpdateTags, onUpdateReminder, allTags, t }) {
+function NoteItem({ note, dateKey, onEdit, onDelete, autoEdit, onUpdateTags, onUpdateReminder, onUpdateSchedule, allTags, t, weather, weatherStatus, notes, onAcceptWeather, tempUnit }) {
     const tr = t || ((k, fb) => fb || k);
     const [editing, setEditing] = useState(autoEdit || false);
     const [draft, setDraft] = useState(note.text);
-    const [deleting, setDeleting] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
     const inputRef = useRef(null);
 
@@ -186,8 +187,7 @@ function NoteItem({ note, dateKey, onEdit, onDelete, autoEdit, onUpdateTags, onU
     }
 
     function handleDelete() {
-        setDeleting(true);
-        setTimeout(() => onDelete(note.id), 300);
+        onDelete(note.id);
     }
 
     const tags = note.tags ?? [];
@@ -213,10 +213,11 @@ function NoteItem({ note, dateKey, onEdit, onDelete, autoEdit, onUpdateTags, onU
 
     return (
         <li
-            className={`note-item${deleting ? ' note-item--deleting' : ''}`}
+            className="note-item"
             draggable
             onDragStart={handleDragStart}
         >
+            {(editing || showDetails) && note.repeat && note.repeat !== 'none' && <p className="event-hint">{tr('event.seriesHint')}</p>}
             {editing ? (
                 <div className="note-edit-row">
                     <textarea
@@ -240,6 +241,10 @@ function NoteItem({ note, dateKey, onEdit, onDelete, autoEdit, onUpdateTags, onU
             ) : (
                 <div className="note-view-row">
                     <div className="note-content">
+                        <div className="event-summary">
+                            <span>{note.time || tr('event.allDay')}</span>
+                            {note.repeat && note.repeat !== 'none' && <span>↻ {tr(`event.repeat.${note.repeat}`)}</span>}
+                        </div>
                         <div className="note-text">
                             <MarkdownText text={note.text} onToggleCheck={handleCheckToggle} />
                         </div>
@@ -291,8 +296,15 @@ function NoteItem({ note, dateKey, onEdit, onDelete, autoEdit, onUpdateTags, onU
             )}
 
             {/* Expandable tags & reminder section */}
+            <EventWeather note={note} dateKey={dateKey} weather={weather} weatherStatus={weatherStatus}
+                notes={notes} onAccept={time => onAcceptWeather(dateKey, dateKey, note.id, time)} tempUnit={tempUnit} t={tr} />
             {showDetails && !editing && (
                 <div className="note-details-panel">
+                    <EventSchedule
+                        value={{ time: note.time || '', repeat: note.repeat || 'none', repeatUntil: note.repeatUntil || '', outdoor: !!note.outdoor }}
+                        onChange={schedule => onUpdateSchedule(note.id, schedule)}
+                        dateKey={note.sourceDateKey || dateKey} t={t}
+                    />
                     <div className="note-details-section">
                         <span className="note-details-label">{tr('tags.label', 'Tags')}</span>
                         <TagInput
@@ -318,20 +330,23 @@ function NoteItem({ note, dateKey, onEdit, onDelete, autoEdit, onUpdateTags, onU
 /* ── Notes Panel (main export) ───────────────────────────────────── */
 export default function NotesPanel({
     dateKey, notes, onAdd, onEdit, onDelete, autoEditNoteId,
-    onUpdateTags, onUpdateReminder, allTags = [], t,
+    onUpdateTags, onUpdateReminder, onUpdateSchedule, allTags = [], t,
+    weather, weatherStatus, onAcceptWeather, tempUnit,
 }) {
     const tr = t || ((k, fb) => fb || k);
     const [newText, setNewText] = useState('');
     const [newTags, setNewTags] = useState([]);
     const [newReminder, setNewReminder] = useState({ enabled: false, intervals: [], notified: [] });
+    const [newSchedule, setNewSchedule] = useState({ time: '', repeat: 'none', repeatUntil: '' });
     const [showNewExtras, setShowNewExtras] = useState(false);
     const inputRef = useRef(null);
 
     function handleAdd() {
         if (!newText.trim()) return;
-        onAdd(dateKey, newText, newTags, newReminder);
+        onAdd(dateKey, newText, newTags, newReminder, newSchedule);
         setNewText('');
         setNewTags([]);
+        setNewSchedule({ time: '', repeat: 'none', repeatUntil: '' });
         setNewReminder({ enabled: false, intervals: [], notified: [] });
         setShowNewExtras(false);
         inputRef.current?.focus();
@@ -355,6 +370,10 @@ export default function NotesPanel({
                     }}
                     rows={2}
                 />
+
+                <EventSchedule value={newSchedule} onChange={setNewSchedule} dateKey={dateKey} t={t} />
+                <EventWeather note={newSchedule} dateKey={dateKey} weather={weather} weatherStatus={weatherStatus}
+                    notes={notes} onAccept={time => setNewSchedule({ ...newSchedule, time })} tempUnit={tempUnit} t={tr} />
 
                 {/* Toggle for tags/reminder on new note */}
                 <div className="notes-add-toolbar">
@@ -406,6 +425,9 @@ export default function NotesPanel({
                             onDelete={(id) => onDelete(dateKey, id)}
                             onUpdateTags={(id, tags) => onUpdateTags(dateKey, id, tags)}
                             onUpdateReminder={(id, rem) => onUpdateReminder(dateKey, id, rem)}
+                            onUpdateSchedule={(id, schedule) => onUpdateSchedule(dateKey, id, schedule)}
+                            weather={weather} weatherStatus={weatherStatus} notes={notes}
+                            onAcceptWeather={onAcceptWeather} tempUnit={tempUnit}
                             allTags={allTags}
                             t={t}
                         />

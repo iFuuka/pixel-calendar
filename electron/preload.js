@@ -2,8 +2,23 @@
 
 const { contextBridge, ipcRenderer } = require('electron');
 
+contextBridge.exposeInMainWorld('electronWeather', {
+    onResume: callback => {
+        const handler = () => callback();
+        ipcRenderer.on('weather-resume', handler);
+        return () => ipcRenderer.removeListener('weather-resume', handler);
+    },
+});
+
 contextBridge.exposeInMainWorld('electronNotify', {
     showReminder: (data) => ipcRenderer.send('show-reminder', data),
+    onAction: (callback) => {
+        if (typeof callback !== 'function') return () => {};
+        const handler = (_event, request) => callback(request);
+        ipcRenderer.on('reminder-action', handler);
+        return () => ipcRenderer.removeListener('reminder-action', handler);
+    },
+    completeAction: (id, result) => ipcRenderer.send('reminder-action-result', id, result),
 });
 
 contextBridge.exposeInMainWorld('electronSettings', {

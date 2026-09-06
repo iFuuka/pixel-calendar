@@ -14,6 +14,7 @@ export default function CalendarGrid({
     onDayClick,
     getWeatherForDate,
     hasNotes,
+    getNotesForDate,
     weatherLoading,
     firstDayOfWeek = 0,
     tempUnit = 'C',
@@ -56,7 +57,7 @@ export default function CalendarGrid({
             <div className={`calendar-grid ${viewMode === 'week' ? 'calendar-grid--week' : ''}`}>
                 {days.map((day) => {
                     const dateKey = format(day, 'yyyy-MM-dd');
-                    const inMonth = isSameMonth(day, currentMonth);
+                    const inMonth = viewMode === 'week' || isSameMonth(day, currentMonth);
                     const isSelected = selectedDate ? isSameDay(day, selectedDate) : false;
                     const weather = layers.weather ? getWeatherForDate(dateKey) : null;
                     const hasNote = layers.notes ? hasNotes(dateKey) : false;
@@ -75,6 +76,9 @@ export default function CalendarGrid({
                             isSelected={isSelected}
                             weather={weather}
                             hasNote={hasNote}
+                            notes={layers.notes ? getNotesForDate(dateKey) : []}
+                            previewLimit={viewMode === 'week' ? 5 : 2}
+                            t={t}
                             weatherLoading={weatherLoading}
                             tempUnit={tempUnit}
                             density={density}

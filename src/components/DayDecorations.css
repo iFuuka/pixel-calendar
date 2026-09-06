@@ -1,0 +1,205 @@
+.day-decorations {
+    border: 2px solid var(--clr-border);
+    border-radius: 3px;
+    background: var(--clr-surface);
+    box-shadow: 3px 3px 0 var(--clr-shadow);
+    min-width: 0;
+}
+
+.day-marks-heading {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 12px;
+    background: linear-gradient(100deg, color-mix(in srgb, var(--clr-lavender) 40%, var(--clr-surface)), var(--clr-surface));
+}
+
+.day-marks-heading h3 { font-size: 0.9rem; font-weight: 700; }
+.day-marks-calendar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 33px;
+    padding-top: 5px;
+    border: 2px solid var(--clr-text2);
+    border-top: 8px solid var(--mark-color);
+    background: var(--clr-panel);
+    font-size: 0.9rem;
+    line-height: 1;
+    box-shadow: 2px 2px 0 var(--clr-border);
+}
+.day-marks-calendar::before, .day-marks-calendar::after {
+    content: '';
+    position: absolute;
+    top: -11px;
+    width: 3px;
+    height: 6px;
+    background: var(--clr-text2);
+}
+.day-marks-calendar::before { left: 5px; }
+.day-marks-calendar::after { right: 5px; }
+
+.day-marks-selected { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 10px 9px; }
+.day-mark-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 27px;
+    padding: 2px 5px;
+    border: 1px solid var(--clr-border);
+    border-radius: 2px;
+    background: var(--clr-panel);
+    color: var(--clr-text);
+    font-size: 0.68rem;
+}
+.day-mark-chip:hover { border-color: var(--clr-selected); }
+.day-mark-swatch { width: 10px; height: 10px; background: var(--mark-color); border: 1px solid var(--clr-text2); }
+
+.day-marks-tabs { display: flex; gap: 3px; padding: 0 8px; border-bottom: 2px solid var(--clr-border); }
+.day-marks-tabs button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+    min-height: 33px;
+    padding: 5px 2px;
+    border: 2px solid transparent;
+    border-bottom: 0;
+    border-radius: 3px 3px 0 0;
+    background: transparent;
+    color: var(--clr-text2);
+    font-size: 0.73rem;
+}
+.day-marks-tabs button:hover { background: var(--clr-panel); color: var(--clr-text); }
+.day-marks-tabs button[aria-selected="true"] {
+    background: var(--clr-lavender);
+    border-color: var(--clr-border);
+    color: var(--clr-text);
+    box-shadow: inset 0 2px 0 color-mix(in srgb, var(--clr-surface) 55%, transparent);
+}
+.day-marks-count { font-size: 0.65rem; white-space: nowrap; }
+
+.day-marks-options { display: grid; gap: 6px; padding: 10px; min-height: 150px; align-content: start; }
+.day-marks-options--mood { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.day-marks-options--color { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.day-marks-options--stickers { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.day-mark-option {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+    min-height: 60px;
+    padding: 5px 2px;
+    border: 1px solid var(--clr-border);
+    border-radius: 2px;
+    background: var(--clr-bg);
+    color: var(--clr-text);
+    box-shadow: 0 2px 0 var(--clr-border);
+    font-size: 0.7rem;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+}
+.day-mark-option:hover:not(:disabled) { border-color: var(--clr-selected); background: var(--clr-panel); }
+.day-mark-option[aria-pressed="true"] {
+    border-color: var(--clr-selected);
+    background: color-mix(in srgb, var(--clr-lavender) 40%, var(--clr-surface));
+    box-shadow: 0 2px 0 var(--clr-selected), inset 0 0 0 1px var(--clr-selected);
+}
+.day-mark-option[aria-pressed="true"]::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 4px;
+    height: 4px;
+    background: var(--clr-selected);
+}
+.day-mark-option:disabled { opacity: 0.4; cursor: default; box-shadow: none; }
+.day-mark-empty { display: grid; place-items: center; width: 24px; height: 24px; font-size: 1.25rem; color: var(--clr-text2); }
+.day-mark-ribbon {
+    width: 18px;
+    height: 24px;
+    background: var(--mark-color);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 67% 100%, 67% 84%, 33% 84%, 33% 100%, 0 100%);
+    box-shadow: inset 3px 0 0 #ffffff50, inset -3px 0 0 #00000018;
+}
+
+.day-countdown { display: flex; flex-direction: column; gap: 8px; margin-top: -8px; }
+.day-countdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 52px;
+    padding: 9px 11px;
+    border: 2px solid var(--clr-peach2);
+    border-radius: 3px;
+    background: var(--clr-peach);
+    color: var(--clr-text);
+    box-shadow: 3px 3px 0 var(--clr-peach2), inset 0 2px 0 color-mix(in srgb, var(--clr-surface) 50%, transparent);
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-align: left;
+}
+.day-countdown-toggle:hover { background: color-mix(in srgb, var(--clr-peach) 75%, var(--clr-surface)); }
+.day-countdown-toggle:active,
+.day-countdown-toggle[aria-expanded="true"] { box-shadow: inset 2px 2px 0 var(--clr-peach2); }
+.day-countdown-icon { flex-shrink: 0; }
+.day-countdown-toggle-label { flex: 1; min-width: 0; }
+.day-countdown-toggle-sign {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--clr-peach2);
+    background: var(--clr-surface);
+    font-size: 1.25rem;
+    line-height: 1;
+}
+.day-countdown-form { display: flex; flex-direction: column; gap: 5px; }
+.day-countdown-label { font-size: 0.72rem; color: var(--clr-text2); }
+.day-countdown-fields { display: flex; gap: 6px; }
+.day-countdown-fields input {
+    width: 0;
+    min-width: 0;
+    flex: 1;
+    padding: 7px 8px;
+    font: inherit;
+    font-size: 0.78rem;
+    border: 2px solid var(--clr-border);
+    border-radius: 2px;
+    background: var(--clr-surface);
+    color: var(--clr-text);
+}
+.day-countdown-fields button {
+    padding: 5px 9px;
+    border: 2px solid var(--clr-mint2);
+    border-radius: 2px;
+    background: var(--clr-mint);
+    color: var(--clr-text);
+    box-shadow: 2px 2px 0 var(--clr-mint2);
+    font-size: 0.75rem;
+}
+.day-countdown-fields button:disabled { opacity: 0.5; cursor: default; box-shadow: none; }
+.day-countdown-list { display: flex; flex-direction: column; gap: 5px; list-style: none; }
+.day-countdown-list li { display: flex; align-items: center; gap: 7px; padding: 4px 7px; border-left: 3px solid var(--clr-lavender2); background: var(--clr-surface); }
+.day-countdown-name { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: 0.76rem; }
+.day-countdown-list button { border: 0; background: transparent; color: var(--clr-text2); min-width: 28px; min-height: 28px; font-size: 1rem; }
+.day-countdown-list button:hover { color: var(--clr-selected); }
+.day-decorations button:focus-visible, .day-countdown :is(button, input):focus-visible {
+    outline: 2px solid var(--clr-selected);
+    outline-offset: 2px;
+}
+
+@media (max-width: 350px) {
+    .day-marks-options { padding: 8px; gap: 5px; }
+    .day-marks-options--stickers { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .day-marks-tabs button { font-size: 0.67rem; }
+}

@@ -117,6 +117,17 @@
     to   { width: 0%; }
   }
 </style>
+<style>
+  .notif-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .notif:has(.notif-actions:not([hidden])) { max-height: 280px; display: flex; flex-direction: column; }
+  .notif-header { flex-shrink: 0; }
+  .notif-body { overflow-y: auto; }
+  .notif-actions[hidden], #actionError[hidden] { display: none; }
+  .notif-actions button { flex: 1; padding: 8px; background: #cbb8f0; color: #4a3860; border: 2px solid #b8a3e0; border-radius: 4px; font: 12px/1.3 'Segoe UI', sans-serif; cursor: pointer; }
+  .notif-actions button:disabled { opacity: .6; cursor: wait; }
+  #actionError { margin: 8px 0 0; color: #7e2844; font: 12px/1.4 'Segoe UI', sans-serif; }
+  .notif-text { max-height: 76px; overflow-y: auto; }
+</style>
 </head>
 <body>
   <div class="notif">
@@ -127,6 +138,11 @@
     <div class="notif-body">
       <div class="notif-date" id="date"></div>
       <div class="notif-text" id="text"></div>
+      <div class="notif-actions" id="actions" hidden>
+        <button id="openEvent" type="button"></button>
+        <button id="snoozeEvent" type="button"></button>
+      </div>
+      <p id="actionError" role="alert" hidden></p>
       <div class="notif-tags" id="tags"></div>
     </div>
     <div class="notif-progress">
@@ -139,6 +155,9 @@
       document.getElementById('title').textContent = data.title || 'Pixel Calendar';
       document.getElementById('date').textContent = '\uD83D\uDCC5 ' + (data.dateKey || '');
       document.getElementById('text').textContent = data.noteText || '';
+      document.getElementById('actions').hidden = data.kind !== 'reminder';
+      document.getElementById('openEvent').textContent = data.openLabel || 'Open event';
+      document.getElementById('snoozeEvent').textContent = data.snoozeLabel || 'Remind in 15 minutes';
 
       const tagsEl = document.getElementById('tags');
       tagsEl.innerHTML = '';
@@ -154,6 +173,22 @@
 
     document.getElementById('closeBtn').addEventListener('click', () => {
       window.notificationApi.close();
+    });
+
+    function setBusy(busy) {
+      for (const id of ['openEvent', 'snoozeEvent', 'closeBtn']) document.getElementById(id).disabled = busy;
+    }
+    for (const [id, action] of [['openEvent', 'open'], ['snoozeEvent', 'snooze']]) {
+      document.getElementById(id).addEventListener('click', () => {
+        setBusy(true);
+        document.getElementById('actionError').hidden = true;
+        window.notificationApi.action(action);
+      });
+    }
+    window.notificationApi.onActionError(error => {
+      setBusy(false);
+      document.getElementById('actionError').textContent = error;
+      document.getElementById('actionError').hidden = false;
     });
 
     // Notification stays until user clicks close

@@ -159,14 +159,17 @@ export default function NotesSidebar({ allNotes, onNoteClick, onDeleteNote, isOp
                                         <li
                                             key={note.id}
                                             className="sidebar-note-item"
-                                            onClick={() => onNoteClick(dateKey)}
+                                            onClick={() => onNoteClick(dateKey, note.id)}
                                             role="button"
                                             tabIndex={0}
-                                            onKeyDown={(e) => e.key === 'Enter' && onNoteClick(dateKey)}
+                                            onKeyDown={(e) => e.key === 'Enter' && onNoteClick(dateKey, note.id)}
                                         >
                                             <span className="sidebar-note-bullet">&#128196;</span>
                                             <div className="sidebar-note-content">
                                                 <span className="sidebar-note-text">{note.text}</span>
+                                                {(note.time || (note.repeat && note.repeat !== 'none')) && (
+                                                    <span className="event-summary">{note.time} {note.repeat && note.repeat !== 'none' ? `↻ ${tr(`event.repeat.${note.repeat}`)}` : ''}</span>
+                                                )}
                                                 {(note.tags ?? []).length > 0 && (
                                                     <div className="sidebar-note-tags">
                                                         {note.tags.map((tag) => (

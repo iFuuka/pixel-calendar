@@ -21,6 +21,7 @@ const DEFAULT_SETTINGS = {
     weatherAlertsEnabled: true, // Smart weather alerts
     updateAlertsEnabled: true,  // GitHub release/tag update alerts
     decorationsEnabled: true, // Seasonal decorations
+    windowBackgroundEnabled: true, // Pixel window with seasonal weather
     customThemeEnabled: false,
     customColors: { bg: '#fdf6f0', surface: '#fff8f4', accent: '#cbb8f0', text: '#4a3860' },
 };
@@ -180,6 +181,7 @@ export function useSettings() {
     const setWeatherAlertsEnabled = useCallback((v) => setSettings((p) => ({ ...p, weatherAlertsEnabled: v })), []);
     const setUpdateAlertsEnabled = useCallback((v) => setSettings((p) => ({ ...p, updateAlertsEnabled: v })), []);
     const setDecorationsEnabled = useCallback((v) => setSettings((p) => ({ ...p, decorationsEnabled: v })), []);
+    const setWindowBackgroundEnabled = useCallback((v) => setSettings((p) => ({ ...p, windowBackgroundEnabled: v })), []);
     const setHolidaysEnabled = useCallback((enabled) => setSettings((p) => ({ ...p, holidaysEnabled: enabled })), []);
     const setHolidayCountry = useCallback((code) => setSettings((p) => ({ ...p, holidayCountry: code, holidaysEnabled: true })), []);
 
@@ -217,6 +219,7 @@ export function useSettings() {
         setWeatherAlertsEnabled,
         setUpdateAlertsEnabled,
         setDecorationsEnabled,
+        setWindowBackgroundEnabled,
         setHolidaysEnabled,
         setHolidayCountry,
         THEME_KEYS,

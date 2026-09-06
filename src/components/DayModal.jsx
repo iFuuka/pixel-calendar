@@ -1,25 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { format, isToday } from 'date-fns';
 import WeatherDetail from './WeatherDetail';
 import HourlyTempChart from './HourlyTempChart';
 import NotesPanel from './NotesPanel';
 import Confetti from './Confetti';
-import { MOOD_OPTIONS } from '../hooks/useMoods';
+import DayDecorations from './DayDecorations';
 import './DayModal.css';
-
-const COLOR_OPTIONS = [
-    { key: 'red', color: '#e57373' },
-    { key: 'blue', color: '#64b5f6' },
-    { key: 'green', color: '#81c784' },
-    { key: 'yellow', color: '#ffd54f' },
-    { key: 'purple', color: '#ba68c8' },
-];
-
-const STICKER_OPTIONS = ['🎂', '✈️', '❤️', '⭐', '🎁', '🎵', '☕', '🏆', '📌', '🔥'];
 
 export default function DayModal({
     selectedDate,
     weather,
+    weatherStatus,
+    onAcceptWeather,
     notes,
     onClose,
     onAddNote,
@@ -27,6 +19,7 @@ export default function DayModal({
     onDeleteNote,
     onUpdateNoteTags,
     onUpdateNoteReminder,
+    onUpdateNoteSchedule,
     holiday,
     dayMeta,
     onSetDayColor,
@@ -44,7 +37,6 @@ export default function DayModal({
 }) {
     const tr = t || ((k, fb) => fb || k);
     const panelRef = useRef(null);
-    const [cdLabel, setCdLabel] = useState('');
 
     useEffect(() => {
         function handleKey(e) { if (e.key === 'Escape') onClose(); }
@@ -64,12 +56,9 @@ export default function DayModal({
     const todayLabel = isToday(selectedDate) ? tr('modal.today', '✨ Today') : null;
     const holidayNames = holiday ? holiday.map(h => lang === 'ru' ? h.ru : h.en) : null;
 
-    const currentColor = dayMeta?.color || null;
     const currentStickers = dayMeta?.stickers || [];
     const hasBirthdaySticker = currentStickers.includes('🎂');
 
-    // Countdowns for this day
-    const dayCountdowns = (countdowns || []).filter(c => c.dateKey === dateKey);
 
     return (
         <>
@@ -104,110 +93,46 @@ export default function DayModal({
                 </div>
 
                 <div className="modal-content">
-                    {/* ── Day decorations block ── */}
-                    <section className="modal-section meta-block">
-                        <div className="meta-block-title">{tr('daymeta.title', 'Day setup')}</div>
-                        {/* Mood row */}
-                        <div className="meta-line">
-                            <span className="meta-line-label">{tr('mood.title', 'Mood')}</span>
-                            <div className="meta-line-items">
-                                {MOOD_OPTIONS.map(({ emoji, key }) => (
-                                    <button
-                                        key={key}
-                                        className={`meta-btn ${mood === emoji ? 'meta-btn--active' : ''}`}
-                                        onClick={() => onSetMood(dateKey, mood === emoji ? null : emoji)}
-                                        title={tr(`mood.${key}`, key)}
-                                    >{emoji}</button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Color label row */}
-                        <div className="meta-line">
-                            <span className="meta-line-label">{tr('daymeta.color', 'Label')}</span>
-                            <div className="meta-line-items">
-                                <button
-                                    className={`meta-color-dot meta-color-dot--none ${!currentColor ? 'meta-color-dot--active' : ''}`}
-                                    onClick={() => onSetDayColor(null)}
-                                    title={tr('daymeta.color.none', 'None')}
-                                />
-                                {COLOR_OPTIONS.map(({ key, color }) => (
-                                    <button
-                                        key={key}
-                                        className={`meta-color-dot ${currentColor === color ? 'meta-color-dot--active' : ''}`}
-                                        style={{ '--dot-clr': color }}
-                                        onClick={() => onSetDayColor(currentColor === color ? null : color)}
-                                        title={tr(`daymeta.color.${key}`, key)}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Stickers row */}
-                        <div className="meta-line">
-                            <span className="meta-line-label">{tr('daymeta.stickers', 'Stickers')}</span>
-                            <div className="meta-line-items">
-                                {STICKER_OPTIONS.map((sticker) => (
-                                    <button
-                                        key={sticker}
-                                        className={`meta-btn ${currentStickers.includes(sticker) ? 'meta-btn--active' : ''}`}
-                                        onClick={() => onToggleSticker(sticker)}
-                                    >{sticker}</button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Countdown row */}
-                        <div className="meta-line">
-                            <span className="meta-line-label">{tr('countdown.title', 'Countdown')}</span>
-                            <div className="meta-line-items meta-line-items--cd">
-                                {dayCountdowns.map(cd => (
-                                    <span key={cd.id} className="meta-cd-pill">
-                                        🎯 {cd.label}
-                                        <button className="meta-cd-pill-x" onClick={() => onRemoveCountdown(cd.id)}>✕</button>
-                                    </span>
-                                ))}
-                                <input
-                                    className="meta-cd-inline-input"
-                                    type="text"
-                                    value={cdLabel}
-                                    onChange={e => setCdLabel(e.target.value)}
-                                    placeholder={dayCountdowns.length === 0 ? tr('countdown.label', 'Event name...') : '+'}
-                                    onKeyDown={e => {
-                                        if (e.key === 'Enter' && cdLabel.trim()) {
-                                            onAddCountdown(dateKey, cdLabel.trim());
-                                            setCdLabel('');
-                                        }
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    </section>
-
-                    {weather && (
-                        <section className="modal-section">
-                            <h3 className="section-title">{tr('modal.weather', '🌤 Weather')}</h3>
-                            <WeatherDetail weather={weather} tempUnit={tempUnit} lang={lang} t={tr} />
-                            {weather.hourly && weather.hourly.length > 0 && (
-                                <HourlyTempChart hourly={weather.hourly} tempUnit={tempUnit} lang={lang} t={tr} />
-                            )}
-                        </section>
-                    )}
-
                     <section className="modal-section">
                         <NotesPanel
                             dateKey={dateKey}
                             notes={notes}
+                            weather={weather} weatherStatus={weatherStatus} onAcceptWeather={onAcceptWeather} tempUnit={tempUnit}
                             onAdd={onAddNote}
                             onEdit={onEditNote}
                             onDelete={onDeleteNote}
                             onUpdateTags={onUpdateNoteTags}
                             onUpdateReminder={onUpdateNoteReminder}
+                            onUpdateSchedule={onUpdateNoteSchedule}
                             autoEditNoteId={autoEditNoteId}
                             allTags={allTags}
                             t={tr}
                         />
                     </section>
+
+                    <DayDecorations key={dateKey} dateKey={dateKey} dayMeta={dayMeta} mood={mood}
+                        onSetMood={onSetMood} onSetDayColor={onSetDayColor} onToggleSticker={onToggleSticker}
+                        countdowns={countdowns} onAddCountdown={onAddCountdown} onRemoveCountdown={onRemoveCountdown} t={tr} />
+
+                        <section className="modal-section weather-section">
+                            <h3 className="section-title">{tr('modal.weather', '🌤 Weather')}</h3>
+                            {weather && (weatherStatus.error || weatherStatus.usingCache
+                                || (weatherStatus.lastUpdated && weatherStatus.now - weatherStatus.lastUpdated > 6 * 3600000)) && (
+                                <p className="event-hint" role="status">{tr(
+                                    weatherStatus.lastUpdated && weatherStatus.now - weatherStatus.lastUpdated > 6 * 3600000
+                                        ? 'eventWeather.stale'
+                                        : weatherStatus.usingCache ? 'weather.status.cached' : 'weather.status.offline'
+                                )}</p>
+                            )}
+                            {weather ? <>
+                            <WeatherDetail weather={weather} tempUnit={tempUnit} lang={lang} t={tr} />
+                            {weather.hourly && weather.hourly.length > 0 && (
+                                <HourlyTempChart hourly={weather.hourly} tempUnit={tempUnit} lang={lang} t={tr} />
+                            )}
+                            </> : <p>{tr(weatherStatus.lastUpdated ? 'eventWeather.outsideRange' : 'eventWeather.missing')}</p>}
+                        </section>
+
+
                 </div>
             </aside>
         </>

@@ -1,5 +1,7 @@
 /* App-level styles */
 .app {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -7,6 +9,24 @@
   margin: 0 auto;
   padding: 20px 16px 40px;
   gap: 20px;
+}
+
+.app--window {
+  padding-top: clamp(56px, 9vh, 84px);
+  padding-bottom: 100px;
+}
+
+/* Show the whole illustration without unmounting any calendar forms. */
+.app--scene-showcase {
+  height: 100vh;
+  max-height: 100vh;
+  padding: 0;
+  overflow: hidden;
+}
+
+.app--scene-showcase > :not(.admin-panel):not(.admin-backdrop) {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .main-content {
@@ -59,6 +79,19 @@
   font-weight: 800;
   padding: 7px 10px;
   cursor: pointer;
+  min-height: 34px;
+  transition: transform 0.1s, filter 0.15s;
+}
+
+.calendar-tool-btn:hover,
+.calendar-layer-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.calendar-tool-btn:active,
+.calendar-layer-btn:active {
+  transform: translate(1px, 1px);
 }
 
 .calendar-tool-btn--active,
@@ -85,7 +118,14 @@
   border-color: var(--clr-selected);
 }
 
+@media (max-width: 1040px) {
+  .calendar-toolbar { grid-template-columns: 1fr auto; }
+  .calendar-search { grid-row: 2; grid-column: 1 / -1; }
+}
+
 @media (max-width: 760px) {
+  .calendar-search { grid-row: auto; }
+  .app--window { padding-top: 60px; }
   .calendar-toolbar {
     grid-template-columns: 1fr;
   }

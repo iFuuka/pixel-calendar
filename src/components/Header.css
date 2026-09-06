@@ -22,6 +22,7 @@
 }
 
 .header-title-group {
+    min-width: 0;
     display: flex;
     flex-direction: column;
 }
@@ -34,6 +35,10 @@
 }
 
 .header-location {
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: 0.72rem;
     color: var(--clr-text2);
     letter-spacing: 0.5px;
@@ -76,7 +81,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 0.62rem;
+    font-size: 0.68rem;
     color: var(--clr-text2);
 }
 

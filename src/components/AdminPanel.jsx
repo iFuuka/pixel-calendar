@@ -1,15 +1,38 @@
 import React, { useState, useMemo } from 'react';
 import { format } from 'date-fns';
 import { REMINDER_INTERVALS } from '../hooks/useNotes';
+import PixelWindow from './PixelWindow';
+import { SCENE_PRESETS } from '../utils/scenePresets';
 import './AdminPanel.css';
 
 /**
  * AdminPanel — secret debug/testing panel.
  * Activated by clicking iFuuka badge 10 times.
  */
-export default function AdminPanel({ isOpen, onClose, allNotes, settings, allTags, onShowToast }) {
+export default function AdminPanel({
+    isOpen, onClose, allNotes, settings, allTags, onShowToast,
+    scenePreview = null, liveScene = {}, onScenePreviewChange,
+    scenePlaying = false, onScenePlayingChange,
+    sceneShowcase = false, onSceneShowcaseChange,
+}) {
     const [tab, setTab] = useState('overview');
     const [testNotifSent, setTestNotifSent] = useState(false);
+    const lang = settings.language === 'ru' ? 'ru' : 'en';
+    const ru = lang === 'ru';
+    const scene = scenePreview ?? liveScene;
+
+    function chooseScene(nextScene) {
+        onScenePlayingChange?.(false);
+        onScenePreviewChange?.(nextScene);
+    }
+
+    function chooseTab(nextTab) {
+        if (tab === 'scenery' && nextTab !== 'scenery') {
+            onSceneShowcaseChange?.(false);
+            chooseScene(null);
+        }
+        setTab(nextTab);
+    }
 
     // ── Stats ────────────────────────────────────────
     const stats = useMemo(() => {
@@ -89,17 +112,18 @@ export default function AdminPanel({ isOpen, onClose, allNotes, settings, allTag
 
     return (
         <>
-            <div className="admin-backdrop" onClick={onClose} />
-            <div className="admin-panel pixel-border">
+            <div className={`admin-backdrop${sceneShowcase ? ' admin-backdrop--showcase' : ''}`} onClick={onClose} />
+            <div className={`admin-panel pixel-border${sceneShowcase ? ' admin-panel--showcase' : ''}`}>
                 <div className="admin-header">
-                    <span className="admin-title">&#128295; Admin Panel</span>
-                    <button className="admin-close-btn" onClick={onClose}>&#10005;</button>
+                    <span className="admin-title">{sceneShowcase ? (ru ? 'Просмотр фона' : 'Scenery preview') : <>&#128295; Admin Panel</>}</span>
+                    <button className="admin-close-btn" onClick={onClose} aria-label={ru ? 'Закрыть админ-панель' : 'Close admin panel'}>&#10005;</button>
                 </div>
 
                 {/* Tabs */}
                 <div className="admin-tabs">
                     {[
                         { key: 'overview', label: 'Overview' },
+                        { key: 'scenery', label: ru ? 'Фон' : 'Scenery' },
                         { key: 'notes', label: 'Notes Data' },
                         { key: 'reminders', label: 'Reminders' },
                         { key: 'storage', label: 'Storage' },
@@ -108,7 +132,8 @@ export default function AdminPanel({ isOpen, onClose, allNotes, settings, allTag
                         <button
                             key={t.key}
                             className={`admin-tab${tab === t.key ? ' active' : ''}`}
-                            onClick={() => setTab(t.key)}
+                            id={`admin-tab-${t.key}`}
+                            onClick={() => chooseTab(t.key)}
                         >
                             {t.label}
                         </button>
@@ -116,6 +141,71 @@ export default function AdminPanel({ isOpen, onClose, allNotes, settings, allTag
                 </div>
 
                 <div className="admin-content">
+                    {tab === 'scenery' && (
+                        <div className="admin-section admin-scene-section">
+                            {!sceneShowcase && (
+                                <div className="admin-scene-preview">
+                                    <PixelWindow scene={scene} animated={settings.decorationsEnabled ?? true} />
+                                </div>
+                            )}
+                            <div className="admin-scene-status" aria-live="polite">
+                                <span className={`admin-scene-indicator${scenePreview ? ' admin-scene-indicator--preview' : ''}`} />
+                                {scenePlaying ? (ru ? 'Сцены сменяются' : 'Playing scenes') : scenePreview ? (ru ? 'Просмотр фона' : 'Scenery preview') : (ru ? 'Текущая погода' : 'Live weather')}
+                            </div>
+                            <div className="admin-scene-controls">
+                                <label htmlFor="admin-scene-season">
+                                    <span>{ru ? 'Сезон' : 'Season'}</span>
+                                    <select id="admin-scene-season" value={scene.season ?? 'summer'} onChange={(event) => chooseScene({ ...scene, season: event.target.value })}>
+                                        <option value="spring">{ru ? 'Весна' : 'Spring'}</option>
+                                        <option value="summer">{ru ? 'Лето' : 'Summer'}</option>
+                                        <option value="autumn">{ru ? 'Осень' : 'Autumn'}</option>
+                                        <option value="winter">{ru ? 'Зима' : 'Winter'}</option>
+                                    </select>
+                                </label>
+                                <label htmlFor="admin-scene-weather">
+                                    <span>{ru ? 'Погода' : 'Weather'}</span>
+                                    <select id="admin-scene-weather" value={scene.weather ?? 'unknown'} onChange={(event) => chooseScene({ ...scene, weather: event.target.value })}>
+                                        <option value="clear">{ru ? 'Ясно' : 'Clear'}</option>
+                                        <option value="cloudy">{ru ? 'Облачно' : 'Cloudy'}</option>
+                                        <option value="rain">{ru ? 'Дождь' : 'Rain'}</option>
+                                        <option value="snow">{ru ? 'Снег' : 'Snow'}</option>
+                                        <option value="fog">{ru ? 'Туман' : 'Fog'}</option>
+                                        <option value="storm">{ru ? 'Гроза' : 'Storm'}</option>
+                                        {(!scene.weather || scene.weather === 'unknown') && <option value="unknown">{ru ? 'Нет прогноза' : 'No forecast'}</option>}
+                                    </select>
+                                </label>
+                                <label htmlFor="admin-scene-phase">
+                                    <span>{ru ? 'Время суток' : 'Time of day'}</span>
+                                    <select id="admin-scene-phase" value={scene.phase ?? 'day'} onChange={(event) => chooseScene({ ...scene, phase: event.target.value })}>
+                                        <option value="day">{ru ? 'День' : 'Day'}</option>
+                                        <option value="dusk">{ru ? 'Закат' : 'Dusk'}</option>
+                                        <option value="night">{ru ? 'Ночь' : 'Night'}</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div className="admin-scene-presets" aria-label={ru ? 'Готовые сцены' : 'Scene presets'}>
+                                {SCENE_PRESETS.map((preset) => {
+                                    const active = scenePreview !== null && ['season', 'weather', 'phase'].every((key) => scene[key] === preset.scene[key]);
+                                    return (
+                                        <button key={preset.id} className={`admin-scene-preset${active ? ' active' : ''}`} data-scene-preset={preset.id} aria-pressed={active} onClick={() => chooseScene(preset.scene)}>
+                                            {preset.label[lang]}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                            <div className="admin-scene-actions">
+                                <button id="admin-scene-play" className={`btn ${scenePlaying ? 'btn-secondary' : 'btn-primary'}`} aria-pressed={scenePlaying} onClick={() => onScenePlayingChange?.(!scenePlaying)}>
+                                    {scenePlaying ? (ru ? 'Пауза' : 'Pause') : (ru ? 'Сменять сцены' : 'Play scenes')}
+                                </button>
+                                <button id="admin-scene-reset" className="btn btn-ghost" onClick={() => chooseScene(null)} disabled={!scenePreview && !scenePlaying}>
+                                    {ru ? 'Текущая погода' : 'Live weather'}
+                                </button>
+                                <button id="admin-scene-showcase" className="btn admin-scene-showcase-btn" aria-pressed={sceneShowcase} onClick={() => onSceneShowcaseChange?.(!sceneShowcase)}>
+                                    {sceneShowcase ? (ru ? 'К календарю' : 'Back to calendar') : (ru ? 'Посмотреть фон' : 'View scenery')}
+                                </button>
+                            </div>
+                        </div>
+                    )}
                     {/* ── Overview Tab ──────────────────── */}
                     {tab === 'overview' && (
                         <div className="admin-section">

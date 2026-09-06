@@ -51,6 +51,9 @@ export default function Header({
                             </button>
                             <span className={`weather-status ${weatherError ? 'weather-status--error' : weatherUsingCache ? 'weather-status--cache' : ''}`}>
                                 {weatherStatus}
+                                {weatherLastUpdated && <span title={new Date(weatherLastUpdated).toLocaleString()}>
+                                    {' · '}{new Date(weatherLastUpdated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </span>}
                             </span>
                         </div>
                     )}

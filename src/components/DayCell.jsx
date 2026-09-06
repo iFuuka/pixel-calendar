@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { getWeatherInfo } from '../utils/weatherCodes';
 import { WeatherIcon } from './PixelIcons';
+import DayMarkIcon from './DayMarkIcon';
 import './DayCell.css';
 
 export default function DayCell({
@@ -12,6 +13,9 @@ export default function DayCell({
     isSelected,
     weather,
     hasNote,
+    notes = [],
+    previewLimit = 2,
+    t,
     weatherLoading,
     tempUnit = 'C',
     density = 'detailed',
@@ -85,7 +89,7 @@ export default function DayCell({
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            aria-label={`${format(day, 'MMMM d, yyyy')}${holidayTitle ? `, ${holidayTitle}` : ''}${hasNote ? ', has notes' : ''}`}
+            aria-label={`${format(day, 'yyyy-MM-dd')}${holidayTitle ? `, ${holidayTitle}` : ''}${hasNote ? `, ${notes.length} ${t('calendar.entries')}: ${notes.slice(0, previewLimit).map(note => `${note.time || ''} ${note.text}`).join('; ')}` : ''}`}
             style={{
                 ...(weatherInfo && inMonth ? { '--weather-bg': weatherInfo.bg } : {}),
                 ...(color && inMonth ? { '--day-label-clr': color } : {}),
@@ -106,6 +110,16 @@ export default function DayCell({
                 </span>
             )}
 
+            {inMonth && (showMood || showStickers) && <div className="day-cell-marks">
+                {showMood && <span className="day-mood" aria-label={`${t('mood.title')}: ${mood}`}>
+                    <DayMarkIcon value={mood} size={16} />
+                </span>}
+                {showStickers && <span className="day-stickers">
+                    {visibleStickers.map((sticker, index) => <span key={index} className="day-sticker"><DayMarkIcon value={sticker} size={16} /></span>)}
+                    {!isDetailed && stickers.length > visibleStickers.length && <span className="day-sticker day-sticker--more">+{stickers.length - visibleStickers.length}</span>}
+                </span>}
+            </div>}
+
             {inMonth && !weatherLoading && weatherInfo && (
                 <div className="day-weather">
                     <WeatherIcon type={weatherInfo.icon} size={24} />
@@ -122,25 +136,16 @@ export default function DayCell({
                 <div className="day-loading">···</div>
             )}
 
-            {/* Stickers */}
-            {showStickers && inMonth && (
-                <div className="day-stickers">
-                    {visibleStickers.map((s, i) => (
-                        <span key={i} className="day-sticker">{s}</span>
+            {notes.length > 0 && inMonth && (
+                <span className="day-event-list">
+                    {notes.slice(0, previewLimit).map(note => (
+                        <span key={note.id} className="day-event" title={`${note.time || t('event.allDay')} · ${note.text}`}>
+                            {note.time && <span className="day-event-time">{note.time}</span>}
+                            <span className="day-event-text">{note.repeat && note.repeat !== 'none' ? '↻ ' : ''}{note.text.split('\n')[0]}</span>
+                        </span>
                     ))}
-                    {!isDetailed && stickers.length > visibleStickers.length && (
-                        <span className="day-sticker day-sticker--more">+{stickers.length - visibleStickers.length}</span>
-                    )}
-                </div>
-            )}
-
-            {/* Mood emoji */}
-            {showMood && inMonth && (
-                <span className="day-mood" aria-label="mood">{mood}</span>
-            )}
-
-            {hasNote && inMonth && (
-                <span className="note-dot" aria-hidden="true" />
+                    {notes.length > previewLimit && <span className="day-event-more">{t('calendar.more').replace('{count}', notes.length - previewLimit)}</span>}
+                </span>
             )}
 
             {/* Color label bar */}
