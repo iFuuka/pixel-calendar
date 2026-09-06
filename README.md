@@ -1,65 +1,101 @@
+<div align="center">
+
+<img src="build/icon.png" width="64" height="64" alt="Pixel Calendar" />
+
 # Pixel Calendar
 
-![Pixel Calendar Icon](build/icon.png)
+**Уютный пиксельный календарь с живым окном, погодой и планами на день.**
 
-Уютный пиксельный календарь с погодой, событиями, заметками и напоминаниями.
+*A cozy pixel-art calendar with a living window, weather and daily plans.*
 
-*A cozy pixel-art calendar with weather, events, notes and reminders.*
+**[Скачать 3.6.1 для Windows](https://github.com/iFuuka/pixel-calendar/releases/download/v3.6.1/PixelCalendar-Portable-3.6.1.exe)** · **[Все релизы / Releases](https://github.com/iFuuka/pixel-calendar/releases)**
 
-**[Скачать для Windows / Download for Windows](https://github.com/iFuuka/pixel-calendar/releases/latest)** — portable x64, установка не нужна.
+Windows x64 · Portable · Русский / English · 5 тем
 
-<img width="1266" height="853" alt="Pixel Calendar" src="https://github.com/user-attachments/assets/831bbe40-bb2a-4cdb-86b4-a822391148d2" />
+</div>
 
-## Новое в 3.6.1
+![Pixel Calendar 3.6.1 — календарь, события и пиксельное окно](docs/images/calendar-3.6.1.png)
 
-Обновление сохраняет знакомые пиксельные шрифты, пастельные темы и объёмные рамки.
+*Актуальный интерфейс версии 3.6.1. Все записи и погодные данные на скриншотах — демонстрационные.*
 
-- **Окно с живым пейзажем.** Погода, сезон и время суток меняют вид за стеклом. Листва, осадки, лепестки, бабочки и светлячки оживляют сцену; молния прорисовывается пиксель за пикселем. Кот дышит во сне и шевелит хвостом, над кружкой поднимается пар. Рама и шторы неподвижны.
-- **Метки дня.** Настроение, подписанные цвета и до трёх стикеров выбираются во вкладках. Пиксельные значки видны под числом в календаре; выбранные метки легко снять. Кнопка «Жду этот день» открывает отдельную форму обратного отсчёта.
-- **События со временем и повторениями.** Ежедневные, еженедельные, ежемесячные и ежегодные события, дата окончания серии, поиск и краткие записи в ячейках. Перетаскивание переносит одно вхождение; редактирование расписания меняет серию.
-- **Погода для планов.** Отметка «На улице» добавляет прогноз к событию со временем. При неблагоприятной температуре или вероятности осадков можно выбрать предложенное время того же дня. Перенос выполняется только после выбора.
-- **Напоминания.** Уведомление позволяет открыть день события или отложить сигнал на 15 минут. Отложенные сигналы сохраняются между запусками.
-- **Полная резервная копия.** События, напоминания, привычки, настроения, оформление, отсчёты и настройки экспортируются вместе. Восстановление проверяет файл, показывает содержимое и сохраняет копию прежних данных.
-- **Работа в трее.** Крестик скрывает календарь в трей; пункт выхода завершает приложение. Размер, положение и развёрнутый вид окна запоминаются. Погода обновляется в фоне, после сна и восстановления сети; прогноз дня всегда раскрыт.
+## Что умеет
 
-Фон и анимации отключаются в настройках; учитывается системное уменьшение движения. Админ-панель → «Фон» позволяет посмотреть восемь сцен, выбрать сезон, погоду и время суток, включить автопоказ или скрыть календарь для просмотра пейзажа. Админка открывается десятью нажатиями на подпись **iFuuka**. Демо не меняет сохранённую погоду и записи.
+| | Возможности |
+| --- | --- |
+| **Живой фон** | Пейзаж за окном меняется по погоде, сезону и времени суток. Дождь, снег, листва, бабочки, светлячки и прорисовывающиеся пиксельные молнии. |
+| **Оформление дня** | Настроение, подписанные цветные метки и до трёх пиксельных стикеров. Выбранные значки видны под датой в календаре. |
+| **События и заметки** | Месячный и недельный виды, время события, повторы, поиск и теги. Перетаскивание переносит отдельное вхождение серии. |
+| **Погода для планов** | Прогноз Open-Meteo, почасовой график и погода для события с отметкой «На улице». Возможные варианты времени выбираются вручную. |
+| **Напоминания и отсчёты** | Уведомления с переходом к событию и откладыванием на 15 минут. Кнопка «Жду этот день» добавляет обратный отсчёт. |
+| **Привычки и данные** | Привычки с отметками, полная резервная копия и проверка файла перед восстановлением. Данные хранятся локально. |
 
-Время событий и напоминаний соответствует часовому поясу устройства. Для напоминаний приложение должно работать, в том числе в трее. Погодные предложения учитывают температуру и осадки в час начала; длительность события, дорога и другие погодные риски не оцениваются.
+<table>
+<tr>
+<td width="50%" valign="top">
+<strong>Настроение дня</strong><br />
+<img src="docs/images/day-marks-3.6.1.png" width="340" alt="Пиксельные настроения и кнопка Жду этот день" />
+</td>
+<td width="50%" valign="top">
+<strong>Стикеры и обратный отсчёт</strong><br />
+<img src="docs/images/countdown-3.6.1.png" width="340" alt="Выбранные стикеры и форма добавления отсчёта" />
+</td>
+</tr>
+</table>
 
-## What's new in 3.6.1
+## Живое пиксельное окно
 
-- A seasonal pixel window follows the weather and daylight, with animated scenery, progressively drawn lightning, a sleeping cat and cup steam. The original fonts, themes and raised frames are preserved.
-- A compact day-mark editor adds custom pixel mood/sticker icons, named color labels, visible selections and a prominent countdown button.
-- Timed and recurring events support calendar previews, search and moving individual occurrences. Outdoor events can show hourly forecasts and optional same-day time suggestions.
-- Reminders can open the event day or snooze for 15 minutes. Full backups include calendar data and settings, with validation and a recovery copy before restore.
-- Closing the window hides it in the tray; window placement persists. Weather refreshes in the background, after resume and reconnect. Day weather stays expanded.
-- Admin scenery previews offer eight presets and a slideshow. Background motion respects animation preferences, reduced motion and hidden windows.
+Кот дышит во сне и иногда шевелит хвостом, над кружкой поднимается пар. Рама и шторы неподвижны. Фон и анимации отключаются в настройках; поддерживается системное уменьшение движения.
 
-## Возможности / Features
+<details>
+<summary>Посмотреть зимнюю ночную сцену</summary>
 
-- Пять тем, пиксельный и классический шрифты / Five themes, pixel and classic fonts.
-- Календарь месяца и недели / Month and week views.
-- Погода Open-Meteo и почасовой график / Open-Meteo weather and hourly chart.
-- Заметки, поиск, теги и закрепление / Notes, search, tags and pinning.
-- Привычки, настроения и обратные отсчёты / Habits, moods and countdowns.
-- Русский, английский, японский и корейский интерфейс / Russian, English, Japanese and Korean interface.
-- Windows x64 portable: `PixelCalendar-Portable-3.6.1.exe`.
+![Зимний пейзаж в режиме просмотра фона](docs/images/winter-night-3.6.1.png)
+
+</details>
+
+Для демонстрации нажмите **10 раз на текст iFuuka** в правом нижнем углу, без пауз дольше трёх секунд. Во вкладке **«Фон»** доступны восемь готовых сцен, ручной выбор погоды и сезона, автопоказ и просмотр пейзажа без календаря. Демо не меняет записи и реальный прогноз.
+
+## Как пользоваться
+
+1. Скачайте `PixelCalendar-Portable-3.6.1.exe` из [релиза](https://github.com/iFuuka/pixel-calendar/releases/tag/v3.6.1) и запустите. Установка не нужна.
+2. Откройте нужный день, добавьте запись и при необходимости укажите время, повторение и напоминание.
+3. Выберите настроение, цвет или стикеры. Для обратного отсчёта нажмите **«Жду этот день»**.
+4. Для переноса данных используйте **Настройки → Данные → Полная резервная копия**. Восстановление покажет содержимое файла перед подтверждением.
+
+**Крестик скрывает календарь в трей.** Для полного выхода выберите **Quit App** в меню значка. Напоминания работают, пока приложение запущено, в том числе в трее. Время событий соответствует часовому поясу устройства.
+
+Portable означает отсутствие установки; данные не лежат рядом с exe. Для переноса на другой компьютер используйте резервную копию. Погодные предложения оценивают температуру и осадки в час начала, без учёта длительности события и дороги.
+
+<details>
+<summary>English quick start</summary>
+
+Download the [Windows x64 portable app](https://github.com/iFuuka/pixel-calendar/releases/latest), then open a day to add notes, timed or recurring events, reminders and pixel decorations.
+
+The background follows weather, season and daylight. Five themes and Russian/English are available. The countdown button, habits and full backups are included.
+
+Closing the window keeps the app in the system tray; choose **Quit App** to exit. Reminders require the app to be running. Event times use the device time zone. Data is stored locally; use a full backup to move it to another computer.
+
+For scenery previews, click the **iFuuka text** ten times, then open the scenery tab.
+
+</details>
 
 ## Разработка / Development
 
 ```sh
 npm ci
 npm run dev
-npm test
-npm run lint
-npm run electron:build
 ```
 
-Готовый exe появляется в `release/`. Для запуска Electron в режиме разработки: `npm run electron:dev`.
+- `npm run electron:dev` — приложение Electron в режиме разработки.
+- `npm test` — автоматические проверки.
+- `npm run lint` — проверка кода.
+- `npm run electron:build` — сборка Windows x64 portable в `release/`.
 
-`node scripts/preview-ui.mjs` создаёт визуальные примеры на вымышленных данных для всех тем. После `npm run dev` они доступны по адресу `/dist/review/vanilla-sky.html`. Production-сборка удаляет эти примеры из `dist`.
+`node scripts/preview-ui.mjs` создаёт визуальные примеры на демонстрационных данных для всех тем. При запущенном `npm run dev` откройте `/dist/review/vanilla-sky.html`. Production-сборка удаляет эти примеры из `dist`.
 
-Подробности выпуска: [release_notes.md](release_notes.md).
+## История версий
+
+[Изменения 3.6.1](release_notes.md) · [Все выпуски и файлы](https://github.com/iFuuka/pixel-calendar/releases)
 
 ---
-*Created by iFuuka* / *Создано iFuuka*
+**Created by iFuuka**
